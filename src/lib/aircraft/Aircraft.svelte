@@ -2,7 +2,7 @@
 
 <script>
   import { onMount, onDestroy } from 'svelte';
-  import { initThreeScene, THREE } from '$lib/scene';
+  import { initThreeScene, cleanupThreeScene, THREE } from '$lib/scene';
   import { setupFlightDynamics, position, velocity, direction } from '$lib/flight';
 
   export let initialPosition = { x: 0, y: 5, z: 0 };
@@ -13,6 +13,8 @@
   let threeScene;
 
   onMount(() => {
+    console.log('Mounting Aircraft component');
+    
     if (typeof window !== 'undefined') {
       threeScene = initThreeScene(container);
       setupFlightDynamics(initialPosition, initialVelocity, initialDirection);
@@ -24,10 +26,8 @@
 
       function animate() {
         requestAnimationFrame(animate);
-
-        // Sync Three.js mesh with Cannon.js body
         $: sphereMesh.position.set($position.x, $position.y, $position.z);
-
+        threeScene.controls.update(); // Update controls
         threeScene.renderer.render(threeScene.scene, threeScene.camera);
       }
 
@@ -36,7 +36,8 @@
   });
 
   onDestroy(() => {
-    // Proper cleanup if needed
+    console.log('Destroying Aircraft component');
+    cleanupThreeScene();
   });
 </script>
 

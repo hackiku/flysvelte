@@ -1,3 +1,5 @@
+// $lib/flight.ts
+
 import { writable } from 'svelte/store';
 import * as CANNON from 'cannon-es';
 

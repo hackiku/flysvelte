@@ -1,16 +1,17 @@
 <!-- $lib/world/Terrain.svelte -->
 
 <script>
-  import { onMount } from 'svelte';
-  import { initThreeScene, THREE } from '$lib/scene';
+  import { onMount, onDestroy } from 'svelte';
+  import { initThreeScene, cleanupThreeScene, THREE } from '$lib/scene';
 
   let container;
   let threeScene;
 
   onMount(() => {
+    console.log('Mounting Terrain component');
+    
     threeScene = initThreeScene(container);
 
-    // Terrain geometry
     const geometry = new THREE.PlaneGeometry(1000, 1000, 100, 100);
     const material = new THREE.MeshStandardMaterial({ color: 0x007700, wireframe: true });
     const terrain = new THREE.Mesh(geometry, material);
@@ -26,8 +27,14 @@
 
   const animate = () => {
     requestAnimationFrame(animate);
+    threeScene.controls.update(); // Update controls
     threeScene.renderer.render(threeScene.scene, threeScene.camera);
   };
+
+  onDestroy(() => {
+    console.log('Destroying Terrain component');
+    cleanupThreeScene();
+  });
 </script>
 
 <style>

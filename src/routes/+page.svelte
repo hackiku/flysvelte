@@ -5,7 +5,7 @@
   import Terrain from '$lib/world/Terrain.svelte';
   import { position, velocity, direction } from '$lib/flight';
 
-  let initialPosition = { x: 0, y: 5, z: 0 };
+  let initialPosition = { x: 100, y: 5, z: 0 };
   let initialVelocity = { x: 1, y: 10, z: 0 };
   let initialDirection = { x: 1, y: 10, z: 0 };
 
@@ -18,7 +18,7 @@
   <div class="absolute top-2 right-2 bg-gray-800 bg-opacity-75 text-white p-4 font-mono">
     <h2>Aircraft Status</h2>
     <div>
-      <span>Position:</span>
+      <span>Positison:</span>
       <div class="ml-2">
         <span>X: {format($position.x)}</span><br>
         <span>Y: {format($position.y)}</span><br>
