@@ -24,6 +24,7 @@
 	},
 	"type": "module",
 	"dependencies": {
+		"cannon-es": "^0.20.0",
 		"three": "^0.164.1",
 		"three.terrain.js": "^2.0.0"
 	}
