@@ -5,7 +5,8 @@
 <script>
   import Aircraft from '$lib/aircraft/Aircraft.svelte';
   import Terrain from '$lib/world/Terrain.svelte';
-  import AxisArrows from '$lib/world/AxisArrows.svelte';
+  import CoordinateLines from '$lib/world/CoordinateLines.svelte'
+  // import AxisArrows from '$lib/world/AxisArrows.svelte';
   import { position, velocity, direction } from '$lib/flight';
   import { initThreeScene } from '$lib/scene';
 
@@ -16,6 +17,8 @@
   let cameraX = 10;
   let cameraY = 10;
   let cameraZ = 10;
+
+  // let axisArrowsPosition = writable({ x: 50, y: 50 });
 
   // Function to format numbers to 3 decimal places
   const format = (num) => num.toFixed(3);
@@ -69,6 +72,8 @@
   <div id="three-container" class="w-screen h-screen">
     <Aircraft {initialPosition} {initialVelocity} {initialDirection} />
     <Terrain />
-    <AxisArrows />
+    <!-- <AxisArrows screenPosition={$axisArrowsPosition} /> -->
+    <!-- <AxisArrows /> -->
+    <CoordinateLines />
   </div>
 </main>
