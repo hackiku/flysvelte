@@ -8,62 +8,53 @@
   let container;
   let threeScene;
   let physicsWorld;
+  let aircraftBody;
 
   onMount(() => {
-    threeScene = initThreeScene(container);
-    physicsWorld = setupPhysicsWorld();
+    if (typeof window !== 'undefined') {
+      threeScene = initThreeScene(container);
+      physicsWorld = setupPhysicsWorld();
 
-    // Create a ground plane
-    const groundShape = new CANNON.Plane();
-    const groundBody = new CANNON.Body({ mass: 0 });
-    groundBody.addShape(groundShape);
-    groundBody.quaternion.setFromEuler(-Math.PI / 2, 0, 0);
-    physicsWorld.addBody(groundBody);
+      // Create a simple sphere to represent the aircraft
+      const sphereGeometry = new THREE.SphereGeometry(1, 32, 32);
+      const sphereMaterial = new THREE.MeshStandardMaterial({ color: 0xff0000 });
+      const sphereMesh = new THREE.Mesh(sphereGeometry, sphereMaterial);
+      threeScene.scene.add(sphereMesh);
 
-    const groundGeometry = new THREE.PlaneGeometry(1000, 1000);
-    const groundMaterial = new THREE.MeshStandardMaterial({ color: 0x007700, wireframe: true });
-    const groundMesh = new THREE.Mesh(groundGeometry, groundMaterial);
-    groundMesh.rotation.x = -Math.PI / 2;
-    threeScene.scene.add(groundMesh);
+      // Log for debugging
+      console.log("Sphere Mesh Added:", sphereMesh);
 
-    // Create a dynamic box
-    const boxShape = new CANNON.Box(new CANNON.Vec3(1, 1, 1));
-    const boxBody = new CANNON.Body({ mass: 1 });
-    boxBody.addShape(boxShape);
-    boxBody.position.set(0, 5, 0);
-    physicsWorld.addBody(boxBody);
+      // Create a corresponding physics body
+      const sphereShape = new CANNON.Sphere(1);
+      aircraftBody = new CANNON.Body({ mass: 1 });
+      aircraftBody.addShape(sphereShape);
+      aircraftBody.position.set(0, 40, 0);
+      physicsWorld.addBody(aircraftBody);
 
-    const boxGeometry = new THREE.BoxGeometry(2, 2, 2);
-    const boxMaterial = new THREE.MeshStandardMaterial({ color: 0xff0000 });
-    const boxMesh = new THREE.Mesh(boxGeometry, boxMaterial);
-    threeScene.scene.add(boxMesh);
+      // Log for debugging
+      console.log("Aircraft Body Added:", aircraftBody);
 
-    // Synchronize Three.js and Cannon.js
-    function animate() {
-      requestAnimationFrame(animate);
+      // Set initial velocity
+      aircraftBody.velocity.set(1, 0, 0); // Move along the x-axis
 
-      // Update physics world
-      physicsWorld.step(1 / 60);
+      // Synchronize Three.js and Cannon.js
+      function animate() {
+        requestAnimationFrame(animate);
 
-      // Sync Three.js mesh with Cannon.js body
-      boxMesh.position.copy(boxBody.position);
-      boxMesh.quaternion.copy(boxBody.quaternion);
+        // Update physics world
+        physicsWorld.step(1 / 60);
 
-      threeScene.renderer.render(threeScene.scene, threeScene.camera);
+        // Sync Three.js mesh with Cannon.js body
+        sphereMesh.position.copy(aircraftBody.position);
+        sphereMesh.quaternion.copy(aircraftBody.quaternion);
+
+        threeScene.renderer.render(threeScene.scene, threeScene.camera);
+      }
+
+      animate();
     }
-
-    animate();
   });
 </script>
 
-<style>
-  :global(body) {
-    margin: 0;
-    overflow: hidden;
-  }
-  :global(canvas) {
-    display: block;
-  }
-</style>
 
 <div bind:this={container} class="w-screen h-screen"></div>

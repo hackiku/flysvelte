@@ -17,11 +17,17 @@
     terrain.rotation.x = -Math.PI / 2;
     threeScene.scene.add(terrain);
 
-    // Add a light
     const light = new THREE.DirectionalLight(0xffffff, 1);
     light.position.set(5, 10, 7.5);
     threeScene.scene.add(light);
+
+    animate();
   });
+
+  const animate = () => {
+    requestAnimationFrame(animate);
+    threeScene.renderer.render(threeScene.scene, threeScene.camera);
+  };
 </script>
 
 <style>
