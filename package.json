@@ -24,6 +24,7 @@
 	},
 	"type": "module",
 	"dependencies": {
-		"three": "^0.164.1"
+		"three": "^0.164.1",
+		"three.terrain.js": "^2.0.0"
 	}
 }
