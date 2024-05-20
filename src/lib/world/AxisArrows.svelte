@@ -1,58 +1,65 @@
-<!-- $lib/world/AxisArrows.svelte -->
+<!-- $lib/world/AxisLines.svelte -->
 
 <script>
   import { onMount, onDestroy } from 'svelte';
-  import { initThreeScene, cleanupThreeScene, THREE } from '$lib/scene';
-
-  export let screenPosition = { x: 50, y: 50 };
+  import { THREE } from '$lib/scene';
+  import { getContext } from 'svelte';
+  import { threeSceneContext } from '$lib/scene';
 
   let container;
-  let threeScene;
-  let arrowX, arrowY, arrowZ;
+  let renderer, camera;
+  let scene = new THREE.Scene();
+  const mainScene = getContext(threeSceneContext);
 
-  const createArrow = (color) => {
-    const material = new THREE.MeshBasicMaterial({ color });
-    const geometry = new THREE.CylinderGeometry(0.05, 0.05, 1, 12);
-    const arrow = new THREE.Mesh(geometry, material);
-    return arrow;
-  };
+  function createArrowHelper(direction, color) {
+    const length = 0.5;
+    const origin = new THREE.Vector3(0, 0, 0);
+    const arrowHelper = new THREE.ArrowHelper(direction, origin, length, color);
+    scene.add(arrowHelper);
+    return arrowHelper;
+  }
 
   onMount(() => {
-    console.log('Mounting AxisArrows component');
+    camera = new THREE.OrthographicCamera(-1, 1, 1, -1, 0.1, 10);
+    camera.position.set(0, 0, 2);
 
-    if (typeof window !== 'undefined') {
-      threeScene = initThreeScene(container);
+    renderer = new THREE.WebGLRenderer({ alpha: true });
+    renderer.setSize(200, 200); // Adjust the size as needed
+    renderer.setPixelRatio(window.devicePixelRatio); // Ensure sharp rendering
+    renderer.domElement.style.position = 'absolute';
+    renderer.domElement.style.bottom = '2rem';
+    renderer.domElement.style.left = '2rem';
+    container.appendChild(renderer.domElement);
 
-      arrowX = createArrow(0xff0000);
-      arrowY = createArrow(0x00ff00);
-      arrowZ = createArrow(0x0000ff);
+    createArrowHelper(new THREE.Vector3(1, 0, 0), 0xff0000);
+    createArrowHelper(new THREE.Vector3(0, 1, 0), 0x00ff00);
+    createArrowHelper(new THREE.Vector3(0, 0, 1), 0x0000ff);
 
-      arrowX.rotation.z = -Math.PI / 2;
-      arrowZ.rotation.x = Math.PI / 2;
-
-      threeScene.scene.add(arrowX);
-      threeScene.scene.add(arrowY);
-      threeScene.scene.add(arrowZ);
-
-      function animate() {
-        requestAnimationFrame(animate);
-
-        arrowX.quaternion.copy(threeScene.camera.quaternion);
-        arrowY.quaternion.copy(threeScene.camera.quaternion);
-        arrowZ.quaternion.copy(threeScene.camera.quaternion);
-
-        threeScene.controls.update();
-        threeScene.renderer.render(threeScene.scene, threeScene.camera);
-      }
-
-      animate();
-    }
+    animate();
   });
 
+  function animate() {
+    requestAnimationFrame(animate);
+
+    // Sync rotation with main camera
+    if (mainScene && mainScene.camera) {
+      camera.quaternion.copy(mainScene.camera.quaternion);
+    }
+
+    renderer.render(scene, camera);
+  }
+
   onDestroy(() => {
-    console.log('Destroying AxisArrows component');
-    cleanupThreeScene();
+    if (container && renderer) {
+      container.removeChild(renderer.domElement);
+    }
   });
 </script>
 
-<div class="fixed left-2 bottom-2" bind:this={container}></div>
+<div class="fixed bottom-2 left-2" bind:this={container}></div>
+
+<style>
+  div {
+    pointer-events: none; /* Make sure it doesn't interfere with other UI elements */
+  }
+</style>

@@ -45,14 +45,4 @@
   });
 </script>
 
-<style>
-  :global(body) {
-    margin: 0;
-    overflow: hidden;
-  }
-  :global(canvas) {
-    display: block;
-  }
-</style>
-
 <div bind:this={container} class="w-screen h-screen"></div>

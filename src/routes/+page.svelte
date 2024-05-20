@@ -1,12 +1,10 @@
-
-
 <!-- +page.svelte -->
 
 <script>
   import Aircraft from '$lib/aircraft/Aircraft.svelte';
   import Terrain from '$lib/world/Terrain.svelte';
   import CoordinateLines from '$lib/world/CoordinateLines.svelte'
-  // import AxisArrows from '$lib/world/AxisArrows.svelte';
+  import AxisArrows from '$lib/world/AxisArrows.svelte';
   import { position, velocity, direction } from '$lib/flight';
   import { initThreeScene } from '$lib/scene';
 
@@ -29,7 +27,8 @@
 </script>
 
 <main class="bg-black w-screen h-screen">
-  <div class="absolute top-2 right-2 bg-gray-800 bg-opacity-60 text-white p-4 font-mono text-xs">    <h2>Aircraft Status</h2>
+  <div class="absolute top-2 right-2 bg-gray-800 bg-opacity-60 text-white p-4 font-mono text-xs">
+    <h2>Aircraft Status</h2>
     <div>
       <span>Position:</span>
       <div class="ml-2">
@@ -68,12 +67,11 @@
       <button on:click={updateCameraPosition} class="mt-2 p-2 bg-blue-600 hover:bg-blue-700 text-white">Update Camera</button>
     </div>
   </div>
-
+  
+  <AxisArrows />
   <div id="three-container" class="w-screen h-screen">
     <Aircraft {initialPosition} {initialVelocity} {initialDirection} />
     <Terrain />
-    <!-- <AxisArrows screenPosition={$axisArrowsPosition} /> -->
-    <!-- <AxisArrows /> -->
     <CoordinateLines />
   </div>
 </main>

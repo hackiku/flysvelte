@@ -2,6 +2,8 @@
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 
+export const threeSceneContext = 'threeSceneContext';
+
 let scene, camera, renderer, controls;
 
 export const initThreeScene = (container, cameraX = 10, cameraY = 10, cameraZ = 10) => {

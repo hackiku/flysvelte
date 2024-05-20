@@ -6,8 +6,8 @@
   import { setupFlightDynamics, position, velocity, direction } from '$lib/flight';
 
   export let initialPosition = { x: 0, y: 5, z: 0 };
-  export let initialVelocity = { x: 1, y: 0, z: 0 };
-  export let initialDirection = { x: 100, y: 0, z: 0 };
+  export let initialVelocity = { x: 1, y: 400, z: 100 };
+  export let initialDirection = { x: 100, y: 10, z: 10 };
 
   let container;
   let threeScene;
