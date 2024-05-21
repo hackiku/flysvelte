@@ -1,4 +1,6 @@
-<script>
+<!-- $lib/ui/VectorArrow.svelte -->
+
+<script lang="ts">
   import { onMount, onDestroy } from 'svelte';
   import { initThreeScene, cleanupThreeScene, THREE } from '$lib/scene';
 
@@ -13,14 +15,17 @@
   let container;
   let threeScene;
 
-  function createTextTexture(text) {
+  function createTextTexture(text: string) {
     const canvas = document.createElement('canvas');
     const context = canvas.getContext('2d');
-    context.font = '48px Arial';
-    context.fillStyle = 'rgba(255, 255, 255, 1)';
-    context.fillText(text, 0, 48);
-    const texture = new THREE.CanvasTexture(canvas);
-    return texture;
+    if (context) {
+      context.font = '48px Arial';
+      context.fillStyle = 'rgba(255, 255, 255, 1)';
+      context.fillText(text, 0, 48);
+      const texture = new THREE.CanvasTexture(canvas);
+      return texture;
+    }
+    return null;
   }
 
   onMount(() => {
@@ -35,13 +40,16 @@
       threeScene.scene.add(arrowHelper);
 
       if (text) {
-        const spriteMaterial = new THREE.SpriteMaterial({ 
-          map: createTextTexture(text), 
-          transparent: true 
-        });
-        const textSprite = new THREE.Sprite(spriteMaterial);
-        textSprite.position.copy(orig.clone().add(dir.multiplyScalar(length + headLength)));
-        threeScene.scene.add(textSprite);
+        const texture = createTextTexture(text);
+        if (texture) {
+          const spriteMaterial = new THREE.SpriteMaterial({ 
+            map: texture, 
+            transparent: true 
+          });
+          const textSprite = new THREE.Sprite(spriteMaterial);
+          textSprite.position.copy(orig.clone().add(dir.multiplyScalar(length + headLength)));
+          threeScene.scene.add(textSprite);
+        }
       }
 
       function animate() {

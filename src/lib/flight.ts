@@ -1,18 +1,17 @@
 // $lib/flight.ts
 
-import { writable } from 'svelte/store';
+import { aircraftPosition, aircraftVelocity, aircraftDirection, physicsEnabled } from './stores';
 import * as CANNON from 'cannon-es';
-
-export const position = writable({ x: 0, y: 5, z: 0 });
-export const velocity = writable({ x: 1, y: 0, z: 0 });
-export const direction = writable({ x: 1, y: 0, z: 0 });
-export const physicsEnabled = writable(false);
 
 let physicsWorld: CANNON.World;
 let aircraftBody: CANNON.Body;
 let animationFrameId: number;
 
-export const setupFlightDynamics = (initialPosition: { x: number, y: number, z: number }, initialVelocity: { x: number, y: number, z: number }, initialDirection: { x: number, y: number, z: number }) => {
+export const setupFlightDynamics = (
+  initialPosition: { x: number, y: number, z: number },
+  initialVelocity: { x: number, y: number, z: number },
+  initialDirection: { x: number, y: number, z: number }
+) => {
   physicsWorld = new CANNON.World();
   physicsWorld.gravity.set(0, -9.82, 0);
 
@@ -23,7 +22,7 @@ export const setupFlightDynamics = (initialPosition: { x: number, y: number, z: 
   aircraftBody.velocity.set(initialVelocity.x, initialVelocity.y, initialVelocity.z);
   physicsWorld.addBody(aircraftBody);
 
-  direction.set(initialDirection);
+  aircraftDirection.set(initialDirection);
 
   let isPhysicsEnabled = false;
   const unsubscribe = physicsEnabled.subscribe(value => {
@@ -34,13 +33,13 @@ export const setupFlightDynamics = (initialPosition: { x: number, y: number, z: 
     if (isPhysicsEnabled) {
       physicsWorld.step(1 / 60);
 
-      position.set({
+      aircraftPosition.set({
         x: aircraftBody.position.x,
         y: aircraftBody.position.y,
         z: aircraftBody.position.z
       });
 
-      velocity.set({
+      aircraftVelocity.set({
         x: aircraftBody.velocity.x,
         y: aircraftBody.velocity.y,
         z: aircraftBody.velocity.z
@@ -65,3 +64,5 @@ export const cleanupFlightDynamics = () => {
     cancelAnimationFrame(animationFrameId);
   }
 };
+
+export { aircraftPosition, aircraftVelocity, aircraftDirection, physicsEnabled };

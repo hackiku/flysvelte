@@ -1,13 +1,13 @@
 <!-- $lib/aircraft/Aircraft.svelte -->
 
-<script>
+<script lang="ts">
   import { onMount, onDestroy } from 'svelte';
   import { initThreeScene, cleanupThreeScene, THREE } from '$lib/scene';
-  import { setupFlightDynamics, cleanupFlightDynamics, position, physicsEnabled } from '$lib/flight';
+  import { aircraftPosition, aircraftVelocity, aircraftDirection, setupFlightDynamics, cleanupFlightDynamics } from '$lib/flight';
 
-  export let initialPosition = { x: 0, y: 5, z: 0 };
-  export let initialVelocity = { x: 1, y: 400, z: 100 };
-  export let initialDirection = { x: 100, y: 10, z: 10 };
+  let initialPosition = { x: 0, y: 5, z: 0 };
+  let initialVelocity = { x: 1, y: 0, z: 0 };
+  let initialDirection = { x: 1, y: 0, z: 0 };
 
   let container;
   let threeScene;
@@ -27,7 +27,7 @@
 
       function animate() {
         requestAnimationFrame(animate);
-        $: sphereMesh.position.set($position.x, $position.y, $position.z);
+        $: sphereMesh.position.set($aircraftPosition.x, $aircraftPosition.y, $aircraftPosition.z);
         threeScene.controls.update(); // Update controls
         threeScene.renderer.render(threeScene.scene, threeScene.camera);
       }

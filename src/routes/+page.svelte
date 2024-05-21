@@ -1,51 +1,48 @@
 <!-- +page.svelte -->
 
-<script>
+<script lang="ts">
   import Aircraft from '$lib/aircraft/Aircraft.svelte';
   import Terrain from '$lib/world/Terrain.svelte';
   import CoordinateLines from '$lib/world/CoordinateLines.svelte';
   import AxisArrows from '$lib/world/AxisArrows.svelte';
   import VectorArrow from '$lib/ui/VectorArrow.svelte';
   import OriginSelector from '$lib/ui/OriginSelector.svelte';
-  import { position, velocity, direction, physicsEnabled, setupFlightDynamics, cleanupFlightDynamics } from '$lib/flight';
-  import { initThreeScene, updateCameraPosition } from '$lib/scene';
+  import { aircraftPosition, aircraftVelocity, aircraftDirection, physicsEnabled, cameraPosition } from '$lib/stores';
+  import { initThreeScene, cleanupThreeScene } from '$lib/scene';
+  import { setupFlightDynamics, cleanupFlightDynamics } from '$lib/flight';
   import { writable } from 'svelte/store';
   import { onMount } from 'svelte';
 
-  let initialPosition = { x: 0, y: 5, z: 0 };
-  let initialVelocity = { x: 20, y: 20, z: 0 };
-  let initialDirection = { x: 200, y: 100, z: 400 };
+  const defaultCameraPosition = { x: 100, y: 40, z: 10 };
 
-  let cameraX = writable(10);
-  let cameraY = writable(20);
-  let cameraZ = writable(40);
-  const defaultCameraX = 100;
-  const defaultCameraY = 200;
-  const defaultCameraZ = 10;
-
-  const format = (num) => num.toFixed(3);
+  const format = (num: number) => num.toFixed(3);
 
   onMount(() => {
     const container = document.querySelector('#three-container');
     if (container) {
-      initThreeScene(container, $cameraX, $cameraY, $cameraZ);
+      initThreeScene(container);
+      setupFlightDynamics(
+        { x: 0, y: 5, z: 0 },
+        { x: 1, y: 10, z: 0 },
+        { x: 1, y: 100, z: 0 }
+      );
     }
-
-    $: updateCameraPosition($cameraX, $cameraY, $cameraZ); 
   });
 
   const resetCameraPosition = () => {
-    cameraX.set(defaultCameraX);
-    cameraY.set(defaultCameraY);
-    cameraZ.set(defaultCameraZ);
+    cameraPosition.set(defaultCameraPosition);
   };
 
   let options = ['Sea Level', 'Center of Gravity', 'Earth Center'];
   let selectedOption = writable(options[0]);
 
   function restartSimulation() {
-    if (cleanupFlightDynamics) cleanupFlightDynamics();
-    setupFlightDynamics(initialPosition, initialVelocity, initialDirection);
+    cleanupFlightDynamics();
+    setupFlightDynamics(
+      { x: 0, y: 5, z: 0 },
+      { x: 1, y: 10, z: 0 },
+      { x: 1, y: 100, z: 0 }
+    );
   }
 </script>
 
@@ -77,53 +74,48 @@
     <div class="status-box">
       <p class="text-[0.8em] opacity-40 mb-1">Position</p>
       <div>
-        <span>X: {format($position.x)}</span><br>
-        <span>Y: {format($position.y)}</span><br>
-        <span>Z: {format($position.z)}</span>
+        <span>X: {format($aircraftPosition.x)}</span><br>
+        <span>Y: {format($aircraftPosition.y)}</span><br>
+        <span>Z: {format($aircraftPosition.z)}</span>
       </div>
     </div>
     <div class="status-box">
       <p class="text-[0.8em] opacity-40 mb-1">Velocity</p>
       <div>
-        <span>X: {format($velocity.x)}</span><br>
-        <span>Y: {format($velocity.y)}</span><br>
-        <span>Z: {format($velocity.z)}</span>
+        <span>X: {format($aircraftVelocity.x)}</span><br>
+        <span>Y: {format($aircraftVelocity.y)}</span><br>
+        <span>Z: {format($aircraftVelocity.z)}</span>
       </div>
     </div>
     <div class="status-box">
       <p class="text-[0.8em] opacity-40 mb-1">Direction</p>
       <div>
-        <span>X: {format($direction.x)}</span><br>
-        <span>Y: {format($direction.y)}</span><br>
-        <span>Z: {format($direction.z)}</span>
+        <span>X: {format($aircraftDirection.x)}</span><br>
+        <span>Y: {format($aircraftDirection.y)}</span><br>
+        <span>Z: {format($aircraftDirection.z)}</span>
       </div>
     </div>
     <div class="status-box">
       <p class="text-[0.8em] opacity-40 mb-1">Camera Position</p>
       <label>
-        X: <input type="number" bind:value={$cameraX} class="ml-2 p-1 bg-gray-700 text-white rounded-md">
+        X: <input type="number" bind:value={$cameraPosition.x} class="ml-2 p-1 bg-gray-700 text-white rounded-md">
       </label><br>
       <label>
-        Y: <input type="number" bind:value={$cameraY} class="ml-2 p-1 bg-gray-700 text-white rounded-md">
+        Y: <input type="number" bind:value={$cameraPosition.y} class="ml-2 p-1 bg-gray-700 text-white rounded-md">
       </label><br>
       <label>
-        Z: <input type="number" bind:value={$cameraZ} class="ml-2 p-1 bg-gray-700 text-white rounded-md">
+        Z: <input type="number" bind:value={$cameraPosition.z} class="ml-2 p-1 bg-gray-700 text-white rounded-md">
       </label><br>
-      <button
-        class="bg-gray-700 text-white bg-opacity-30 px-4 py-2 rounded-md hover:bg-gray-600 focus:outline-none mt-2"
-        on:click={resetCameraPosition}
-      >
-        Reset camera
-      </button>
+      <button on:click={resetCameraPosition} class="mt-2 p-2 bg-blue-600 hover:bg-blue-700 text-white rounded-md">Return to Default</button>
     </div>
   </div>
   
   <AxisArrows />
   <div id="three-container" class="w-screen h-screen">
-    <Aircraft {initialPosition} {initialVelocity} {initialDirection} />
+    <Aircraft />
     <Terrain />
     <CoordinateLines />
-    <VectorArrow color={0x00ff00} text="Velocity" origin={initialPosition} direction={initialVelocity} />
+    <VectorArrow color={0x00ff00} text="Velocity" origin={$aircraftPosition} direction={$aircraftVelocity} />
   </div>
 </main>
 
