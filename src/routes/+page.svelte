@@ -7,13 +7,13 @@
   import AxisArrows from '$lib/world/AxisArrows.svelte';
   import VectorArrow from '$lib/ui/VectorArrow.svelte';
   import OriginSelector from '$lib/ui/OriginSelector.svelte';
-  import { position, velocity, direction } from '$lib/flight';
+  import { position, velocity, direction, physicsEnabled } from '$lib/flight';
   import { initThreeScene } from '$lib/scene';
   import { writable } from 'svelte/store';
 
   let initialPosition = { x: 0, y: 5, z: 0 };
-  let initialVelocity = { x: 1, y: 10, z: 0 };
-  let initialDirection = { x: 1, y: 100, z: 0 };
+  let initialVelocity = { x: 0, y: 0, z: 0 };
+  let initialDirection = { x: 1, y: 0, z: 0 };
 
   let cameraX = 10;
   let cameraY = 200;
@@ -32,43 +32,63 @@
   <!-- origin selector -->
   <OriginSelector {options} {selectedOption} />
 
-  <div class="absolute top-2 right-2 bg-gray-800 bg-opacity-60 text-white p-4 font-mono text-xs">
-    <div>
-      <span>Position:</span>
-      <div class="ml-2">
+  <!-- Physics Toggle -->
+  <div class="absolute top-2 left-2 bg-gray-800 bg-opacity-30 text-white p-2 font-mono text-xs rounded-lg mt-16">
+    <p class="text-[0.8em] opacity-40 mb-1">Physics</p>
+  <button
+    class="bg-gray-700 text-white px-4 py-2 rounded-md hover:bg-gray-600 focus:outline-none"
+    on:click={() => {
+      console.log('Toggling physics:', !$physicsEnabled);
+      physicsEnabled.update(enabled => !enabled);
+    }}
+  >
+    {#if $physicsEnabled}
+      Disable Physics
+    {:else}
+      Enable Physics
+    {/if}
+  </button>
+
+  </div>
+
+  <!-- Aircraft Status -->
+  <div class="absolute top-2 right-2 bg-gray-800 bg-opacity-30 text-white p-2 font-mono text-xs rounded-lg status-container">
+    <div class="status-box">
+      <p class="text-[0.8em] opacity-40 mb-1">Position</p>
+      <div>
         <span>X: {format($position.x)}</span><br>
         <span>Y: {format($position.y)}</span><br>
         <span>Z: {format($position.z)}</span>
       </div>
     </div>
-    <div>
-      <span>Velocity:</span>
-      <div class="ml-2">
+    <div class="status-box">
+      <p class="text-[0.8em] opacity-40 mb-1">Velocity</p>
+      <div>
         <span>X: {format($velocity.x)}</span><br>
         <span>Y: {format($velocity.y)}</span><br>
         <span>Z: {format($velocity.z)}</span>
       </div>
     </div>
-    <div>
-      <span>Direction:</span>
-      <div class="ml-2">
+    <div class="status-box">
+      <p class="text-[0.8em] opacity-40 mb-1">Direction</p>
+      <div>
         <span>X: {format($direction.x)}</span><br>
         <span>Y: {format($direction.y)}</span><br>
         <span>Z: {format($direction.z)}</span>
       </div>
     </div>
-    <div>
-      <h3>Camera Position</h3>
+    <div class="status-box">
+      <p class="text-[0.8em] opacity-40 mb-1">Camera Position</p>
       <label>
-        X: <input type="number" bind:value={cameraX} class="ml-2 p-1 bg-gray-700 text-white">
+        X: <input type="number" bind:value={cameraX} class="ml-2 p-1 bg-gray-700 text-white rounded-md">
       </label><br>
       <label>
-        Y: <input type="number" bind:value={cameraY} class="ml-2 p-1 bg-gray-700 text-white">
+        Y: <input type="number" bind:value={cameraY} class="ml-2 p-1 bg-gray-700 text-white rounded-md">
       </label><br>
       <label>
-        Z: <input type="number" bind:value={cameraZ} class="ml-2 p-1 bg-gray-700 text-white">
+        Z: <input type="number" bind:value={cameraZ} class="ml-2 p-1 bg-gray-700 text-white rounded-md">
       </label><br>
-      <button on:click={updateCameraPosition} class="mt-2 p-2 bg-blue-600 hover:bg-blue-700 text-white">Update Camera</button>
+      <button on:click={updateCameraPosition} class="mt-2 p-2 bg-blue-600 hover:bg-blue-700 text-white rounded-md">Update Camera</button>
     </div>
   </div>
   
@@ -80,3 +100,16 @@
     <VectorArrow color={0x00ff00} text="Velocity" origin={initialPosition} direction={initialVelocity} />
   </div>
 </main>
+
+<style>
+  .status-container {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+  .status-box {
+    background-color: rgba(31, 41, 55, 0.3); /* bg-gray-800 with opacity */
+    padding: 0.5rem;
+    border-radius: 0.375rem; /* rounded-md */
+  }
+</style>

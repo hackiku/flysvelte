@@ -3,7 +3,7 @@
 <script>
   import { onMount, onDestroy } from 'svelte';
   import { initThreeScene, cleanupThreeScene, THREE } from '$lib/scene';
-  import { setupFlightDynamics, position, velocity, direction } from '$lib/flight';
+  import { setupFlightDynamics, cleanupFlightDynamics, position, physicsEnabled } from '$lib/flight';
 
   export let initialPosition = { x: 0, y: 5, z: 0 };
   export let initialVelocity = { x: 1, y: 400, z: 100 };
@@ -11,13 +11,14 @@
 
   let container;
   let threeScene;
+  let cleanupDynamics;
 
   onMount(() => {
     console.log('Mounting Aircraft component');
     
     if (typeof window !== 'undefined') {
       threeScene = initThreeScene(container);
-      setupFlightDynamics(initialPosition, initialVelocity, initialDirection);
+      cleanupDynamics = setupFlightDynamics(initialPosition, initialVelocity, initialDirection);
 
       const sphereGeometry = new THREE.SphereGeometry(1, 32, 32);
       const sphereMaterial = new THREE.MeshStandardMaterial({ color: 0xff0000 });
@@ -38,6 +39,7 @@
   onDestroy(() => {
     console.log('Destroying Aircraft component');
     cleanupThreeScene();
+    if (cleanupDynamics) cleanupDynamics();
   });
 </script>
 

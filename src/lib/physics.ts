@@ -1,3 +1,4 @@
+// lib/physics.ts
 import * as CANNON from 'cannon-es';
 
 export const setupPhysicsWorld = () => {

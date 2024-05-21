@@ -15,7 +15,7 @@
 </script>
 
 <div class="absolute top-2 left-2 bg-gray-800 bg-opacity-60 text-white p-2 rounded-lg font-mono text-xs">
-  <p class="text-[0.8em] opacity-40 mb-1">select origin</p>
+  <p class="text-[0.8em] opacity-40 mb-1">Origin</p>
   <div class="relative inline-block">
     <button 
       class="bg-gray-700 text-white px-4 py-2 rounded-md hover:bg-gray-600 focus:outline-none flex items-center" 
