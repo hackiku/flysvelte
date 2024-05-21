@@ -1,3 +1,4 @@
+
 <!-- +page.svelte -->
 <script lang="ts">
   import Aircraft from '$lib/aircraft/Aircraft.svelte';
@@ -6,6 +7,7 @@
   import AxisArrows from '$lib/world/AxisArrows.svelte';
   import VectorArrow from '$lib/ui/VectorArrow.svelte';
   import OriginSelector from '$lib/ui/OriginSelector.svelte';
+  import NumberInput from '$lib/ui/NumberInput.svelte';
   import { aircraftPosition, aircraftVelocity, aircraftDirection, physicsEnabled, cameraPosition, defaultCameraPosition } from '$lib/stores';
   import { initThreeScene, cleanupThreeScene } from '$lib/scene';
   import { setupFlightDynamics, cleanupFlightDynamics } from '$lib/flight';
@@ -83,44 +85,32 @@
   <!-- Aircraft Status -->
   <div class="absolute top-2 right-2 bg-gray-800 bg-opacity-30 text-white p-2 font-mono text-xs rounded-lg status-container">
     <div class="status-box">
-      <p class="text-[0.8em] opacity-40 mb-1">Position</p>
-      <div>
-        <span>X: {format($aircraftPosition.x)}</span><br>
-        <span>Y: {format($aircraftPosition.y)}</span><br>
-        <span>Z: {format($aircraftPosition.z)}</span>
-      </div>
+      <NumberInput label="Position X" unit="[m]" step={0.1} min={-1000} max={1000} bind:value={$aircraftPosition.x} />
+      <NumberInput label="Position Y" unit="[m]" step={0.1} min={-1000} max={1000} bind:value={$aircraftPosition.y} />
+      <NumberInput label="Position Z" unit="[m]" step={0.1} min={-1000} max={1000} bind:value={$aircraftPosition.z} />
     </div>
     <div class="status-box">
-      <p class="text-[0.8em] opacity-40 mb-1">Velocity</p>
-      <div>
-        <span>X: {format($aircraftVelocity.x)}</span><br>
-        <span>Y: {format($aircraftVelocity.y)}</span><br>
-        <span>Z: {format($aircraftVelocity.z)}</span>
-      </div>
+      <NumberInput label="Velocity X" unit="[m/s]" step={0.1} min={-100} max={100} bind:value={$aircraftVelocity.x} />
+      <NumberInput label="Velocity Y" unit="[m/s]" step={0.1} min={-100} max={100} bind:value={$aircraftVelocity.y} />
+      <NumberInput label="Velocity Z" unit="[m/s]" step={0.1} min={-100} max={100} bind:value={$aircraftVelocity.z} />
     </div>
     <div class="status-box">
-      <p class="text-[0.8em] opacity-40 mb-1">Direction</p>
-      <div>
-        <span>X: {format($aircraftDirection.x)}</span><br>
-        <span>Y: {format($aircraftDirection.y)}</span><br>
-        <span>Z: {format($aircraftDirection.z)}</span>
-      </div>
+      <NumberInput label="Direction X" unit="[deg]" step={1} min={0} max={360} bind:value={$aircraftDirection.x} />
+      <NumberInput label="Direction Y" unit="[deg]" step={1} min={0} max={360} bind:value={$aircraftDirection.y} />
+      <NumberInput label="Direction Z" unit="[deg]" step={1} min={0} max={360} bind:value={$aircraftDirection.z} />
     </div>
+
     <div class="status-box">
       <p class="text-[0.8em] opacity-40 mb-1">Camera Position</p>
-      <label>
-        X: <input type="number" bind:value={$cameraPosition.x} class="ml-2 p-1 bg-gray-700 text-white rounded-md">
-      </label><br>
-      <label>
-        Y: <input type="number" bind:value={$cameraPosition.y} class="ml-2 p-1 bg-gray-700 text-white rounded-md">
-      </label><br>
-      <label>
-        Z: <input type="number" bind:value={$cameraPosition.z} class="ml-2 p-1 bg-gray-700 text-white rounded-md">
-      </label><br>
+      <NumberInput label="Camera X" unit="[m]" step={1} min={-1000} max={1000} bind:value={$cameraPosition.x} />
+      <NumberInput label="Camera Y" unit="[m]" step={1} min={-1000} max={1000} bind:value={$cameraPosition.y} />
+      <NumberInput label="Camera Z" unit="[m]" step={1} min={-1000} max={1000} bind:value={$cameraPosition.z} />
+
       <button on:click={resetCameraPosition} class="mt-2 p-2 bg-blue-600 hover:bg-blue-700 text-white rounded-md">Return to Default</button>
     </div>
   </div>
 
+  
   <AxisArrows />
   <div id="three-container" class="w-screen h-screen">
     <Aircraft />
