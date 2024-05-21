@@ -1,12 +1,13 @@
 // $lib/scene.ts
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
+import { cameraPosition, defaultCameraPosition } from './stores';
 
 export const threeSceneContext = 'threeSceneContext';
 
 let scene, camera, renderer, controls;
 
-export const initThreeScene = (container, cameraX = 10, cameraY = 10, cameraZ = 10) => {
+export const initThreeScene = (container) => {
   console.log('Initializing Three.js scene');
 
   if (!scene) {
@@ -15,9 +16,13 @@ export const initThreeScene = (container, cameraX = 10, cameraY = 10, cameraZ = 
 
   if (!camera) {
     camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-    // Set the initial camera position
-    camera.position.set(cameraX, cameraY, cameraZ);
-    camera.lookAt(new THREE.Vector3(0, 0, 0));  // Adjust the target point as needed
+
+    cameraPosition.set(defaultCameraPosition); // Set to default on initialization
+
+    cameraPosition.subscribe(pos => {
+      camera.position.set(pos.x, pos.y, pos.z);
+      camera.lookAt(new THREE.Vector3(0, 0, 0));
+    });
   }
 
   if (!renderer) {
@@ -37,17 +42,6 @@ export const initThreeScene = (container, cameraX = 10, cameraY = 10, cameraZ = 
   }
 
   return { scene, camera, renderer, controls };
-};
-
-export const updateCameraPosition = (cameraX, cameraY, cameraZ) => {
-  if (camera) {
-    camera.position.set(cameraX, cameraY, cameraZ);
-    camera.lookAt(new THREE.Vector3(0, 0, 0));  // Ensure the camera looks at the target
-    console.log(`Camera Position - X: ${cameraX}, Y: ${cameraY}, Z: ${cameraZ}`);
-    if (controls) {
-      controls.update();
-    }
-  }
 };
 
 export const cleanupThreeScene = () => {

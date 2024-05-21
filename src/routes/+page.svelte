@@ -7,13 +7,11 @@
   import AxisArrows from '$lib/world/AxisArrows.svelte';
   import VectorArrow from '$lib/ui/VectorArrow.svelte';
   import OriginSelector from '$lib/ui/OriginSelector.svelte';
-  import { aircraftPosition, aircraftVelocity, aircraftDirection, physicsEnabled, cameraPosition } from '$lib/stores';
+  import { aircraftPosition, aircraftVelocity, aircraftDirection, physicsEnabled, cameraPosition, defaultCameraPosition } from '$lib/stores';
   import { initThreeScene, cleanupThreeScene } from '$lib/scene';
   import { setupFlightDynamics, cleanupFlightDynamics } from '$lib/flight';
   import { writable } from 'svelte/store';
   import { onMount } from 'svelte';
-
-  const defaultCameraPosition = { x: 100, y: 40, z: 10 };
 
   const format = (num: number) => num.toFixed(3);
 
@@ -22,9 +20,9 @@
     if (container) {
       initThreeScene(container);
       setupFlightDynamics(
-        { x: 0, y: 5, z: 0 },
-        { x: 1, y: 10, z: 0 },
-        { x: 1, y: 100, z: 0 }
+        { x: 0, y: 5, z: 0 },  // Initial Position
+        { x: 20, y: 10, z: -10 },  // Initial Velocity
+        { x: 1, y: 10, z: 0 }   // Initial Direction
       );
     }
   });
@@ -45,6 +43,7 @@
     );
   }
 </script>
+
 
 <main class="bg-black w-screen h-screen">
   <!-- origin selector -->
