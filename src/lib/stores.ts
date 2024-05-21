@@ -31,7 +31,7 @@ export const aircraftVelocity = createVectorStore({ x: 1, y: 0, z: 0 });
 export const aircraftDirection = createVectorStore({ x: 1, y: 0, z: 0 });
 
 // Camera Store
-export const defaultCameraPosition: Vector3 = { x: 60, y: 20, z: 30 }; // Default values
+export const defaultCameraPosition: Vector3 = { x: 6, y: 20, z: 30 }; 
 export const cameraPosition = createVectorStore(defaultCameraPosition);
 
 // Physics Enabled Store

@@ -1,5 +1,4 @@
 <!-- +page.svelte -->
-
 <script lang="ts">
   import Aircraft from '$lib/aircraft/Aircraft.svelte';
   import Terrain from '$lib/world/Terrain.svelte';
@@ -15,15 +14,16 @@
 
   const format = (num: number) => num.toFixed(3);
 
+  const initialAircraftPosition = { x: 0, y: 5, z: 0 };
+  const initialAircraftVelocity = { x: 1, y: 10, z: 0 };
+  const initialAircraftDirection = { x: 1, y: 10, z: 0 };
+
   onMount(() => {
     const container = document.querySelector('#three-container');
     if (container) {
       initThreeScene(container);
-      setupFlightDynamics(
-        { x: 0, y: 5, z: 0 },  // Initial Position
-        { x: 20, y: 10, z: -10 },  // Initial Velocity
-        { x: 1, y: 10, z: 0 }   // Initial Direction
-      );
+      setupFlightDynamics(initialAircraftPosition, initialAircraftVelocity, initialAircraftDirection);
+      cameraPosition.set(defaultCameraPosition);
     }
   });
 
@@ -34,31 +34,43 @@
   let options = ['Sea Level', 'Center of Gravity', 'Earth Center'];
   let selectedOption = writable(options[0]);
 
+  const isPaused = writable(false);
+
   function restartSimulation() {
     cleanupFlightDynamics();
-    setupFlightDynamics(
-      { x: 0, y: 5, z: 0 },
-      { x: 1, y: 10, z: 0 },
-      { x: 1, y: 100, z: 0 }
-    );
+
+    // Reset aircraft position, velocity, and direction
+    aircraftPosition.set(initialAircraftPosition);
+    aircraftVelocity.set(initialAircraftVelocity);
+    aircraftDirection.set(initialAircraftDirection);
+
+    setupFlightDynamics(initialAircraftPosition, initialAircraftVelocity, initialAircraftDirection);
+  }
+
+  function pauseSimulation() {
+    isPaused.update(value => !value);
+    physicsEnabled.update(enabled => !enabled);
   }
 </script>
-
 
 <main class="bg-black w-screen h-screen">
   <!-- origin selector -->
   <OriginSelector {options} {selectedOption} />
 
-  <!-- Physics Toggle and Restart Button -->
-  <div class="absolute flex flex-col top-2 left-2 bg-gray-800 bg-opacity-30
-    text-white p-2 font-mono text-[0.6em] rounded-lg mt-16">
+  <!-- Physics Toggle, Pause, and Restart Button -->
+  <div class="absolute flex flex-col top-2 left-2 bg-gray-800 bg-opacity-30 text-white p-2 font-mono text-[0.6em] rounded-lg mt-16">
     <p class="text-[0.8em] opacity-40 mb-1">Physics</p>
     <button
-      class="bg-gray-700 text-white px-4 py-2 rounded-md hover:bg-gray-600
-        bg-opacity-30 focus:outline-none"
+      class="bg-gray-700 text-white px-4 py-2 rounded-md hover:bg-gray-600 bg-opacity-30 focus:outline-none"
       on:click={() => physicsEnabled.update(enabled => !enabled)}
     >
       Physics: {$physicsEnabled ? 'ON' : 'OFF'}
+    </button>
+    <button
+      class="bg-gray-700 text-white bg-opacity-30 px-4 py-2 rounded-md hover:bg-gray-600 focus:outline-none mt-2"
+      on:click={pauseSimulation}
+    >
+      {$isPaused ? 'Resume Simulation' : 'Pause Simulation'}
     </button>
     <button
       class="bg-gray-700 text-white bg-opacity-30 px-4 py-2 rounded-md hover:bg-gray-600 focus:outline-none mt-2"
@@ -108,7 +120,7 @@
       <button on:click={resetCameraPosition} class="mt-2 p-2 bg-blue-600 hover:bg-blue-700 text-white rounded-md">Return to Default</button>
     </div>
   </div>
-  
+
   <AxisArrows />
   <div id="three-container" class="w-screen h-screen">
     <Aircraft />

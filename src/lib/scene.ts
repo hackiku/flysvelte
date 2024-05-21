@@ -1,7 +1,7 @@
 // $lib/scene.ts
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
-import { cameraPosition, defaultCameraPosition } from './stores';
+import { cameraPosition } from './stores';
 
 export const threeSceneContext = 'threeSceneContext';
 
@@ -17,11 +17,11 @@ export const initThreeScene = (container) => {
   if (!camera) {
     camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
 
-    cameraPosition.set(defaultCameraPosition); // Set to default on initialization
+    cameraPosition.set({ x: 10, y: 10, z: 10 }); // Ensure default position
 
     cameraPosition.subscribe(pos => {
       camera.position.set(pos.x, pos.y, pos.z);
-      camera.lookAt(new THREE.Vector3(0, 0, 0));
+      camera.lookAt(new THREE.Vector3(0, 0, 0)); // Ensure camera looks at the origin
     });
   }
 
