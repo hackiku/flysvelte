@@ -5,8 +5,14 @@
   import Terrain from '$lib/world/Terrain.svelte';
   import CoordinateLines from '$lib/world/CoordinateLines.svelte'
   import AxisArrows from '$lib/world/AxisArrows.svelte';
+  
+  import VectorArrow from '$lib/ui/VectorArrow.svelte';
+
+
   import { position, velocity, direction } from '$lib/flight';
   import { initThreeScene } from '$lib/scene';
+
+
 
   let initialPosition = { x: 0, y: 5, z: 0 };
   let initialVelocity = { x: 1, y: 10, z: 0 };
@@ -73,5 +79,9 @@
     <Aircraft {initialPosition} {initialVelocity} {initialDirection} />
     <Terrain />
     <CoordinateLines />
+
+    <VectorArrow color={0x00ff00} text="Velocity" origin={initialPosition} direction={initialVelocity} />
+    <!-- <VectorArrow color={0x00ff00} text=`${x: ${initialPosition}}` origin={initialPosition} direction={initialVelocity} /> -->
+
   </div>
 </main>
