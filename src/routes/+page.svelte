@@ -8,20 +8,36 @@
   import VectorArrow from '$lib/ui/VectorArrow.svelte';
   import OriginSelector from '$lib/ui/OriginSelector.svelte';
   import { position, velocity, direction, physicsEnabled, setupFlightDynamics, cleanupFlightDynamics } from '$lib/flight';
-  import { initThreeScene } from '$lib/scene';
+  import { initThreeScene, updateCameraPosition } from '$lib/scene';
   import { writable } from 'svelte/store';
+  import { onMount } from 'svelte';
 
   let initialPosition = { x: 0, y: 5, z: 0 };
-  let initialVelocity = { x: 1, y: 10, z: 0 };
-  let initialDirection = { x: 1, y: 100, z: 0 };
+  let initialVelocity = { x: 20, y: 20, z: 0 };
+  let initialDirection = { x: 200, y: 100, z: 400 };
 
-  let cameraX = 10;
-  let cameraY = 200;
-  let cameraZ = 10;
+  let cameraX = writable(10);
+  let cameraY = writable(20);
+  let cameraZ = writable(40);
+  const defaultCameraX = 100;
+  const defaultCameraY = 200;
+  const defaultCameraZ = 10;
 
   const format = (num) => num.toFixed(3);
-  const updateCameraPosition = () => {
-    initThreeScene(document.querySelector('#three-container'), cameraX, cameraY, cameraZ);
+
+  onMount(() => {
+    const container = document.querySelector('#three-container');
+    if (container) {
+      initThreeScene(container, $cameraX, $cameraY, $cameraZ);
+    }
+
+    $: updateCameraPosition($cameraX, $cameraY, $cameraZ); 
+  });
+
+  const resetCameraPosition = () => {
+    cameraX.set(defaultCameraX);
+    cameraY.set(defaultCameraY);
+    cameraZ.set(defaultCameraZ);
   };
 
   let options = ['Sea Level', 'Center of Gravity', 'Earth Center'];
@@ -38,10 +54,12 @@
   <OriginSelector {options} {selectedOption} />
 
   <!-- Physics Toggle and Restart Button -->
-  <div class="absolute flex flex-col top-2 left-2 bg-gray-800 bg-opacity-30 text-white p-2 font-mono text-[0.6em] rounded-lg mt-16">
+  <div class="absolute flex flex-col top-2 left-2 bg-gray-800 bg-opacity-30
+    text-white p-2 font-mono text-[0.6em] rounded-lg mt-16">
     <p class="text-[0.8em] opacity-40 mb-1">Physics</p>
     <button
-      class="bg-gray-700 text-white px-4 py-2 rounded-md hover:bg-gray-600 bg-opacity-30 focus:outline-none"
+      class="bg-gray-700 text-white px-4 py-2 rounded-md hover:bg-gray-600
+        bg-opacity-30 focus:outline-none"
       on:click={() => physicsEnabled.update(enabled => !enabled)}
     >
       Physics: {$physicsEnabled ? 'ON' : 'OFF'}
@@ -83,15 +101,20 @@
     <div class="status-box">
       <p class="text-[0.8em] opacity-40 mb-1">Camera Position</p>
       <label>
-        X: <input type="number" bind:value={cameraX} class="ml-2 p-1 bg-gray-700 text-white rounded-md">
+        X: <input type="number" bind:value={$cameraX} class="ml-2 p-1 bg-gray-700 text-white rounded-md">
       </label><br>
       <label>
-        Y: <input type="number" bind:value={cameraY} class="ml-2 p-1 bg-gray-700 text-white rounded-md">
+        Y: <input type="number" bind:value={$cameraY} class="ml-2 p-1 bg-gray-700 text-white rounded-md">
       </label><br>
       <label>
-        Z: <input type="number" bind:value={cameraZ} class="ml-2 p-1 bg-gray-700 text-white rounded-md">
+        Z: <input type="number" bind:value={$cameraZ} class="ml-2 p-1 bg-gray-700 text-white rounded-md">
       </label><br>
-      <button on:click={updateCameraPosition} class="mt-2 p-2 bg-blue-600 hover:bg-blue-700 text-white rounded-md">Update Camera</button>
+      <button
+        class="bg-gray-700 text-white bg-opacity-30 px-4 py-2 rounded-md hover:bg-gray-600 focus:outline-none mt-2"
+        on:click={resetCameraPosition}
+      >
+        Reset camera
+      </button>
     </div>
   </div>
   
