@@ -3,38 +3,36 @@
 <script>
   import Aircraft from '$lib/aircraft/Aircraft.svelte';
   import Terrain from '$lib/world/Terrain.svelte';
-  import CoordinateLines from '$lib/world/CoordinateLines.svelte'
+  import CoordinateLines from '$lib/world/CoordinateLines.svelte';
   import AxisArrows from '$lib/world/AxisArrows.svelte';
-  
   import VectorArrow from '$lib/ui/VectorArrow.svelte';
-
-
+  import OriginSelector from '$lib/ui/OriginSelector.svelte';
   import { position, velocity, direction } from '$lib/flight';
   import { initThreeScene } from '$lib/scene';
-
-
+  import { writable } from 'svelte/store';
 
   let initialPosition = { x: 0, y: 5, z: 0 };
   let initialVelocity = { x: 1, y: 10, z: 0 };
   let initialDirection = { x: 1, y: 100, z: 0 };
 
   let cameraX = 10;
-  let cameraY = 10;
+  let cameraY = 200;
   let cameraZ = 10;
 
-  // let axisArrowsPosition = writable({ x: 50, y: 50 });
-
-  // Function to format numbers to 3 decimal places
   const format = (num) => num.toFixed(3);
-
   const updateCameraPosition = () => {
     initThreeScene(document.querySelector('#three-container'), cameraX, cameraY, cameraZ);
   };
+
+  let options = ['Sea Level', 'Center of Gravity', 'Earth Center'];
+  let selectedOption = writable(options[0]);
 </script>
 
 <main class="bg-black w-screen h-screen">
+  <!-- origin selector -->
+  <OriginSelector {options} {selectedOption} />
+
   <div class="absolute top-2 right-2 bg-gray-800 bg-opacity-60 text-white p-4 font-mono text-xs">
-    <h2>Aircraft Status</h2>
     <div>
       <span>Position:</span>
       <div class="ml-2">
@@ -79,9 +77,6 @@
     <Aircraft {initialPosition} {initialVelocity} {initialDirection} />
     <Terrain />
     <CoordinateLines />
-
     <VectorArrow color={0x00ff00} text="Velocity" origin={initialPosition} direction={initialVelocity} />
-    <!-- <VectorArrow color={0x00ff00} text=`${x: ${initialPosition}}` origin={initialPosition} direction={initialVelocity} /> -->
-
   </div>
 </main>
