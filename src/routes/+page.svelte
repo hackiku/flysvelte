@@ -7,13 +7,13 @@
   import AxisArrows from '$lib/world/AxisArrows.svelte';
   import VectorArrow from '$lib/ui/VectorArrow.svelte';
   import OriginSelector from '$lib/ui/OriginSelector.svelte';
-  import { position, velocity, direction, physicsEnabled } from '$lib/flight';
+  import { position, velocity, direction, physicsEnabled, setupFlightDynamics, cleanupFlightDynamics } from '$lib/flight';
   import { initThreeScene } from '$lib/scene';
   import { writable } from 'svelte/store';
 
   let initialPosition = { x: 0, y: 5, z: 0 };
-  let initialVelocity = { x: 0, y: 0, z: 0 };
-  let initialDirection = { x: 1, y: 0, z: 0 };
+  let initialVelocity = { x: 1, y: 10, z: 0 };
+  let initialDirection = { x: 1, y: 100, z: 0 };
 
   let cameraX = 10;
   let cameraY = 200;
@@ -26,29 +26,32 @@
 
   let options = ['Sea Level', 'Center of Gravity', 'Earth Center'];
   let selectedOption = writable(options[0]);
+
+  function restartSimulation() {
+    if (cleanupFlightDynamics) cleanupFlightDynamics();
+    setupFlightDynamics(initialPosition, initialVelocity, initialDirection);
+  }
 </script>
 
 <main class="bg-black w-screen h-screen">
   <!-- origin selector -->
   <OriginSelector {options} {selectedOption} />
 
-  <!-- Physics Toggle -->
-  <div class="absolute top-2 left-2 bg-gray-800 bg-opacity-30 text-white p-2 font-mono text-xs rounded-lg mt-16">
+  <!-- Physics Toggle and Restart Button -->
+  <div class="absolute flex flex-col top-2 left-2 bg-gray-800 bg-opacity-30 text-white p-2 font-mono text-[0.6em] rounded-lg mt-16">
     <p class="text-[0.8em] opacity-40 mb-1">Physics</p>
-  <button
-    class="bg-gray-700 text-white px-4 py-2 rounded-md hover:bg-gray-600 focus:outline-none"
-    on:click={() => {
-      console.log('Toggling physics:', !$physicsEnabled);
-      physicsEnabled.update(enabled => !enabled);
-    }}
-  >
-    {#if $physicsEnabled}
-      Disable Physics
-    {:else}
-      Enable Physics
-    {/if}
-  </button>
-
+    <button
+      class="bg-gray-700 text-white px-4 py-2 rounded-md hover:bg-gray-600 bg-opacity-30 focus:outline-none"
+      on:click={() => physicsEnabled.update(enabled => !enabled)}
+    >
+      Physics: {$physicsEnabled ? 'ON' : 'OFF'}
+    </button>
+    <button
+      class="bg-gray-700 text-white bg-opacity-30 px-4 py-2 rounded-md hover:bg-gray-600 focus:outline-none mt-2"
+      on:click={restartSimulation}
+    >
+      Restart Simulation
+    </button>
   </div>
 
   <!-- Aircraft Status -->
