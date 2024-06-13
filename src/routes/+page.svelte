@@ -55,7 +55,7 @@
   }
 </script>
 
-<main class="bg-black w-screen h-screen">
+<main class="bg-black w-screen h-screen overflow-hidden">
   <!-- origin selector -->
   <OriginSelector {options} {selectedOption} />
 
