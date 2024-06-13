@@ -1,3 +1,4 @@
+// import { onMount } from 'svelte';
 import { writable } from 'svelte/store';
 import Header from './components/Header.svelte';
 import NumberInput from './components/NumberInput.svelte';
@@ -9,10 +10,52 @@ import Button from './components/Button.svelte';
 import Sidebar from './components/Sidebar.svelte';
 import Columns from './components/layouts/Columns.svelte';
 import RenderUi from './render/RenderUi.svelte';
+import Graph from './components/Graph.svelte';
+
+// export let layout = [];
 
 let components = [];
 let sidebarComponents = [];
 
+// async function loadCustomComponent(name) {
+// 	const module = await import(`./components/custom/${name}`);
+// 	return module.default;
+// }
+
+// onMount(async () => {
+// 	for (const item of layout) {
+// 		if (item.type === 'custom') {
+// 			const CustomComponent = await loadCustomComponent(item.component);
+// 			components.push({ component: CustomComponent, props: {} });
+// 		} else {
+// 			const Component = getComponent(item.type);
+// 			components.push({ component: Component, props: item });
+// 		}
+// 	}
+// });
+
+function getComponent(type) {
+	switch (type) {
+		case 'header':
+			return Header;
+		case 'input':
+			return item.inputType === 'number' ? NumberInput : Slider;
+		case 'paragraph':
+			return Paragraph;
+		case 'columns':
+			return Columns;
+		case 'button':
+			return Button;
+		case 'image':
+			return Image;
+		case 'sidebar':
+			return Sidebar;
+		default:
+			return null;
+	}
+}
+
+// ----------------------------------------
 export function header(level, text) {
 	components.push({
 		component: Header,
@@ -28,6 +71,7 @@ export function numberInput(label, value, options) {
 	});
 	return store;
 }
+
 
 export function paragraph(text) {
 	const store = writable(text);
@@ -81,6 +125,14 @@ export function columns(numColumns) {
 		props: { numColumns, components: colComponents }
 	});
 }
+
+export function graph(type, data, options) {
+	components.push({
+		component: Graph,
+		props: { type, data, options }
+	});
+}
+
 
 function clearComponents() {
 	const renderContainer = document.getElementById('render-container');

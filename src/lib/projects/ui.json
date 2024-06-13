@@ -1,0 +1,178 @@
+{
+	"projectPage": {
+		"title": "Rocket Performance Calculator",
+		"layout": [
+			{
+				"type": "header",
+				"level": 1,
+				"text": "Rockety"
+			},
+			{
+				"type": "columns",
+				"count": 3,
+				"content": [
+					{
+						"type": "header",
+						"level": 1,
+						"text": "Col1 h1"
+					},
+					{
+						"type": "header",
+						"level": 3,
+						"text": "Col2 h3"
+					},
+					{
+						"type": "paragraph",
+						"text": "Col3 text"
+					}
+				]
+			},
+			{
+				"type": "paragraph",
+				"text": "This application helps you fly."
+			},
+			{
+				"type": "header",
+				"level": 3,
+				"text": "Inputs"
+			},
+			{
+				"type": "input",
+				"inputType": "number",
+				"label": "Total Mass (kg)",
+				"value": 300,
+				"options": {
+					"min": 1,
+					"step": 5
+				}
+			},
+			{
+				"type": "input",
+				"inputType": "slider",
+				"label": "Flow rate (kg/s)",
+				"value": 15,
+				"options": {
+					"min": 1,
+					"max": 100,
+					"step": 1
+				}
+			},
+			{
+				"type": "custom",
+				"component": "CustomChamberPressure.svelte"
+			},
+			{
+				"type": "sidebar",
+				"content": [
+					{
+						"type": "input",
+						"inputType": "number",
+						"label": "Burn Time (seconds)",
+						"value": 5,
+						"options": {
+							"min": 0.1,
+							"step": 0.1
+						}
+					},
+					{
+						"type": "input",
+						"inputType": "slider",
+						"label": "Chamber Pressure (bar)",
+						"value": 15,
+						"options": {
+							"min": 1,
+							"max": 100,
+							"step": 1
+						}
+					}
+				]
+			},
+			{
+				"type": "header",
+				"level": 2,
+				"text": "Results"
+			},
+			{
+				"type": "calculation",
+				"function": "calculateBurnTime",
+				"inputs": [
+					"totalMass",
+					"flowRate"
+				],
+				"outputs": [
+					{
+						"type": "derived",
+						"variable": "burnTimeDerived",
+						"calculation": "totalMass / flowRate",
+						"display": "Burn Time: {burnTimeDerived.toFixed(2)} seconds"
+					}
+				]
+			},
+			{
+				"type": "button",
+				"label": "Calculate",
+				"action": "calculate"
+			},
+			{
+				"type": "image",
+				"src": "sveltelit/streamlit.png",
+				"alt": "Rocket Diagram"
+			}
+		],
+		"functions": [
+			{
+				"name": "calculateBurnTime",
+				"parameters": [
+					"totalMass",
+					"flowRate"
+				],
+				"body": "totalMass / flowRate"
+			},
+			{
+				"name": "calculateThrust",
+				"parameters": [
+					"chamberPressure",
+					"throatArea",
+					"thrustCoefficient"
+				],
+				"body": "chamberPressure * throatArea * thrustCoefficient"
+			},
+			{
+				"name": "calculate",
+				"body": "const thrust = calculateThrust(chamberPressure * 100000, throatArea / 1000000, thrustCoefficient); const acceleration = thrust / totalMass; const deltaV = 9.81 * Math.log(totalMass / (totalMass - (thrust * burnTime / (9.81 * 9.81)))); metric('Thrust', thrust, 'N'); metric('Acceleration', acceleration, 'm/s²'); metric('Delta-V', deltaV, 'm/s');"
+			},
+			{
+				"name": "algebraExample",
+				"parameters": [
+					"a",
+					"b",
+					"c"
+				],
+				"body": "(-b + sqrt(b^2 - 4*a*c)) / (2*a)"
+			},
+			{
+				"name": "trigExample",
+				"parameters": [
+					"angle"
+				],
+				"body": "sin(angle) + cos(angle)"
+			},
+			{
+				"name": "differentialExample",
+				"parameters": [
+					"y",
+					"t"
+				],
+				"body": "-0.5 * y"
+			},
+			{
+				"name": "solverExample",
+				"parameters": [
+					"func",
+					"initialGuess"
+				],
+				"body": "solve(func, initialGuess)"
+			}
+		]
+	}
+}

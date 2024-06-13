@@ -24,8 +24,13 @@
 	},
 	"type": "module",
 	"dependencies": {
+		"cannon": "^0.6.2",
 		"cannon-es": "^0.20.0",
+		"chart.js": "^4.4.3",
+		"katex": "^0.16.10",
+		"mathjs": "^13.0.0",
 		"three": "^0.164.1",
-		"three.terrain.js": "^2.0.0"
+		"three.terrain.js": "^2.0.0",
+		"yaml": "^2.4.5"
 	}
 }

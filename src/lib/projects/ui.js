@@ -1,17 +1,17 @@
-// userInput.js
+// ui.js
 import { header, numberInput, paragraph, slider, image, metric, button, sidebar, render, columns } from '$lib/sveltelit/svelteLit';
 import { writable, derived } from 'svelte/store';
 
 // config
 
-header(1, "Rockety");
-paragraph("This application makes you fly.");
+header(1, "Skibidi rocket");
+paragraph("This application makes you apply to fly.");
 
-columns(3);
+columns(1);
 
-header(2, "Col1 h2");
-header(3, "Col2 h3");
-paragraph("Col3 text");
+// header(2, "Col1 h2");
+// header(3, "Col2 h3");
+// paragraph("Col3 text");
 
 header(3, "Inputs");
 
