@@ -7,6 +7,7 @@ import Slider from './components/Slider.svelte';
 import Image from './components/Image.svelte';
 import Button from './components/Button.svelte';
 import Sidebar from './components/Sidebar.svelte';
+import Columns from './components/layouts/Columns.svelte';
 import RenderUi from './render/RenderUi.svelte';
 
 let components = [];
@@ -54,11 +55,12 @@ export function image(src, alt) {
 }
 
 export function metric(label, value, unit) {
+	const store = writable(value);
 	components.push({
 		component: Metric,
-		props: { label, value, unit }
+		props: { label, value: store, unit }
 	});
-	return value; // Return the store directly for use in other calculations if needed
+	return store;
 }
 
 export function button(label, onClick) {
@@ -70,6 +72,14 @@ export function button(label, onClick) {
 
 export function sidebar(...content) {
 	sidebarComponents = content.map(item => (typeof item === 'function' ? item() : item));
+}
+
+export function columns(numColumns) {
+	const colComponents = components.splice(components.length - numColumns, numColumns);
+	components.push({
+		component: Columns,
+		props: { numColumns, components: colComponents }
+	});
 }
 
 function clearComponents() {

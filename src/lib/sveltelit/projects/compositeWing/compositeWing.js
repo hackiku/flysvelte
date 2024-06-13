@@ -1,62 +1,49 @@
 // compositeWing.js
-import { header, numberInput, textInput, paragraph, slider, button, render } from '$lib/sveltelit/svelteLit';
+import { header, numberInput, paragraph, slider, button, columns, render } from '$lib/sveltelit/svelteLit';
 import { writable, derived } from 'svelte/store';
-import { getMaterialProperties } from './materials';
-import { generateCADModel } from './cad';
-import { runFEMAnalysis } from './femap';
 
 header(1, "Composite Wing Design");
 
-paragraph("Design and optimize a composite wing structure with real-time calculations and visualizations.");
-
+// Material Properties
 header(2, "Material Properties");
+let materialDensity = numberInput("Material Density (kg/m³)", 1600, { min: 1000, max: 2500, step: 10 });
 
-const selectedMaterial = textInput("Material", "Carbon Fiber");
-const materialProperties = derived(selectedMaterial, $selectedMaterial => getMaterialProperties($selectedMaterial));
-
-const density = derived(materialProperties, props => props?.density || 0);
-const youngsModulus = derived(materialProperties, props => props?.youngsModulus || 0);
-const poissonRatio = derived(materialProperties, props => props?.poissonRatio || 0);
-
+// Geometry Definition
 header(2, "Geometry Definition");
+let wingSpan = numberInput("Wing Span (m)", 10, { min: 5, max: 50, step: 0.1 });
+let rootChord = numberInput("Root Chord (m)", 2, { min: 0.5, max: 5, step: 0.1 });
+let tipChord = numberInput("Tip Chord (m)", 1, { min: 0.1, max: 3, step: 0.1 });
+let sweepAngle = numberInput("Sweep Angle (degrees)", 15, { min: 0, max: 45, step: 1 });
 
-const wingSpan = numberInput("Wing Span (m)", 10, { min: 5, max: 50, step: 0.1 });
-const rootChord = numberInput("Root Chord (m)", 2, { min: 0.5, max: 5, step: 0.1 });
-const tipChord = numberInput("Tip Chord (m)", 1, { min: 0.1, max: 3, step: 0.1 });
-const sweepAngle = numberInput("Sweep Angle (degrees)", 15, { min: 0, max: 45, step: 1 });
+// Use columns to arrange the next 3 inputs
+columns(3);
 
-header(2, "Load Cases");
+// Load Cases
+header(1, "Col1 h1");
+header(3, "Col2 h3");
+paragraph("Col3 text");
 
-const loadFactor = numberInput("Load Factor", 2.5, { min: 1, max: 6, step: 0.1 });
-const wingLoading = numberInput("Wing Loading (N/m²)", 5000, { min: 2000, max: 10000, step: 100 });
+let loadFactor = numberInput("Load Factor", 2.5, { min: 1, max: 6, step: 0.1 });
+let wingLoading = numberInput("Wing Loading (N/m²)", 5000, { min: 2000, max: 10000, step: 100 });
 
+// Derived Calculation
+const wingArea = derived([wingSpan, rootChord, tipChord], ([$wingSpan, $rootChord, $tipChord]) => {
+	return ($rootChord + $tipChord) * $wingSpan / 2; // Simplified trapezoidal area calculation
+});
+
+const wingWeight = derived([wingArea, materialDensity, loadFactor], ([$wingArea, $materialDensity, $loadFactor]) => {
+	return $wingArea * $materialDensity * $loadFactor; // Simplified weight calculation
+});
+
+// Display Results
 header(2, "Results");
+paragraph(derived(wingArea, $wingArea => `Wing Area: ${$wingArea.toFixed(2)} m²`));
+paragraph(derived(wingWeight, $wingWeight => `Wing Weight: ${$wingWeight.toFixed(2)} N`));
 
-const wingParameters = derived(
-	[density, youngsModulus, poissonRatio, wingSpan, rootChord, tipChord, sweepAngle, loadFactor, wingLoading],
-	([$density, $youngsModulus, $poissonRatio, $wingSpan, $rootChord, $tipChord, $sweepAngle, $loadFactor, $wingLoading]) => ({
-		density: $density,
-		modulus: $youngsModulus,
-		poisson: $poissonRatio,
-		span: $wingSpan,
-		rootChord: $rootChord,
-		tipChord: $tipChord,
-		sweep: $sweepAngle,
-		loadFactor: $loadFactor,
-		wingLoading: $wingLoading
-	})
-);
-
+// Run Calculations
 function runCalculations() {
-	const cadModel = generateCADModel(wingParameters);
-	const femResults = runFEMAnalysis(wingParameters);
-
-	console.log('CAD Model:', cadModel);
-	console.log('FEM Results:', femResults);
-
-	// Display results in the UI
-	paragraph(`CAD Model URL: ${cadModel.url}`);
-	paragraph(`FEM Results: ${JSON.stringify(femResults)}`);
+	// Here you can add more complex calculations or function calls
+	console.log('Running calculations...');
 }
 
 button("Run Calculations", runCalculations);
