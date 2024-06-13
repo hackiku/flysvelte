@@ -2,6 +2,8 @@ import { writable } from 'svelte/store';
 import NumberInput from './components/NumberInput.svelte';
 import Header from './components/Header.svelte';
 import Metric from './components/Metric.svelte';
+import Button from './components/Button.svelte';
+import TextInput from './components/TextInput.svelte';
 import RenderUi from './render/RenderUi.svelte';
 
 let components = [];
@@ -13,6 +15,22 @@ export function numberInput(label, value, options) {
 		props: { label, value, ...options, store }
 	});
 	return store;
+}
+
+export function textInput(label, value) {
+	const store = writable(value);
+	components.push({
+		component: TextInput,
+		props: { label, value, store }
+	});
+	return store;
+}
+
+export function button(label, onClick) {
+	components.push({
+		component: Button,
+		props: { label, onClick }
+	});
 }
 
 export function header(text) {

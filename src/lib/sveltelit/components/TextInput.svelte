@@ -1,8 +1,6 @@
 <script>
   export let label;
   export let value;
-  export let min;
-  export let step;
   export let store;
 
   $: store.set(value);
@@ -11,10 +9,8 @@
 <div class="mb-4">
   <label class="block text-gray-400 mb-2">{label}</label>
   <input 
-    type="number" 
+    type="text" 
     bind:value={$store} 
-    min={min} 
-    step={step} 
     class="w-full p-2 border border-gray-600 rounded bg-gray-800 text-gray-200" 
   />
   <span class="block text-gray-400 mt-2">{value}</span>
