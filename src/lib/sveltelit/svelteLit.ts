@@ -1,4 +1,4 @@
-import { writable } from 'svelte/store';
+import { writable, derived } from 'svelte/store';
 import Header from './components/Header.svelte';
 import NumberInput from './components/NumberInput.svelte';
 import Metric from './components/Metric.svelte';
@@ -6,9 +6,11 @@ import Paragraph from './components/Paragraph.svelte';
 import Slider from './components/Slider.svelte';
 import Image from './components/Image.svelte';
 import Button from './components/Button.svelte';
+import Sidebar from './components/Sidebar.svelte';
 import RenderUi from './render/RenderUi.svelte';
 
 let components = [];
+let sidebarComponents = [];
 
 export function header(level, text) {
 	components.push({
@@ -27,10 +29,12 @@ export function numberInput(label, value, options) {
 }
 
 export function paragraph(text) {
+	const store = writable(text);
 	components.push({
 		component: Paragraph,
-		props: { text }
+		props: { text: store }
 	});
+	return store;
 }
 
 export function slider(label, value, options) {
@@ -50,10 +54,12 @@ export function image(src, alt) {
 }
 
 export function metric(label, value, unit) {
+	const store = writable(value);
 	components.push({
 		component: Metric,
-		props: { label, value, unit }
+		props: { label, value: store, unit }
 	});
+	return store;
 }
 
 export function button(label, onClick) {
@@ -61,6 +67,10 @@ export function button(label, onClick) {
 		component: Button,
 		props: { label, onClick }
 	});
+}
+
+export function sidebar(...content) {
+	sidebarComponents = content.map(item => (typeof item === 'function' ? item() : item));
 }
 
 function clearComponents() {
@@ -77,6 +87,13 @@ export function render() {
 		renderContainer.id = 'render-container';
 		document.body.appendChild(renderContainer);
 
+		if (sidebarComponents.length > 0) {
+			components.unshift({
+				component: Sidebar,
+				props: { components: sidebarComponents }
+			});
+		}
+
 		new RenderUi({
 			target: renderContainer,
 			props: { components }
@@ -84,6 +101,7 @@ export function render() {
 
 		// Clear components array for next render
 		components = [];
+		sidebarComponents = [];
 	} else {
 		console.error("render() can only be called in a browser environment.");
 	}

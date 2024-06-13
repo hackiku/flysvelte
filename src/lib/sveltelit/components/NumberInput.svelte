@@ -1,11 +1,22 @@
 <script>
+  import { onDestroy } from 'svelte';
+  import { writable } from 'svelte/store';
   export let label;
   export let value;
   export let min;
   export let step;
-  export let store;
+  export let store = writable(value);
 
-  $: store.set(value);
+  let unsubscribe;
+  $: if (store.subscribe) {
+    unsubscribe = store.subscribe(val => {
+      value = val;
+    });
+  }
+
+  onDestroy(() => {
+    if (unsubscribe) unsubscribe();
+  });
 </script>
 
 <div class="mb-4">
@@ -17,5 +28,5 @@
     step={step} 
     class="w-full p-2 border border-gray-600 rounded bg-gray-800 text-gray-200" 
   />
-  <span class="block text-gray-400 mt-2">{value}</span>
+  <span class="block text-gray-400 mt-2"> {value}</span>
 </div>

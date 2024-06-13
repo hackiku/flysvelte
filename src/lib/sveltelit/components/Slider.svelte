@@ -1,12 +1,23 @@
 <script>
+  import { onDestroy } from 'svelte';
+  import { writable } from 'svelte/store';
   export let label;
   export let value;
   export let min;
   export let max;
   export let step;
-  export let store;
+  export let store = writable(value);
 
-  $: store.set(value);
+  let unsubscribe;
+  $: if (store.subscribe) {
+    unsubscribe = store.subscribe(val => {
+      value = val;
+    });
+  }
+
+  onDestroy(() => {
+    if (unsubscribe) unsubscribe();
+  });
 </script>
 
 <div class="mb-4">
