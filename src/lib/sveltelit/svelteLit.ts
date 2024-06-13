@@ -1,12 +1,21 @@
 import { writable } from 'svelte/store';
-import NumberInput from './components/NumberInput.svelte';
 import Header from './components/Header.svelte';
+import NumberInput from './components/NumberInput.svelte';
 import Metric from './components/Metric.svelte';
+import Paragraph from './components/Paragraph.svelte';
+import Slider from './components/Slider.svelte';
+import Image from './components/Image.svelte';
 import Button from './components/Button.svelte';
-import TextInput from './components/TextInput.svelte';
 import RenderUi from './render/RenderUi.svelte';
 
 let components = [];
+
+export function header(level, text) {
+	components.push({
+		component: Header,
+		props: { level, text }
+	});
+}
 
 export function numberInput(label, value, options) {
 	const store = writable(value);
@@ -17,26 +26,26 @@ export function numberInput(label, value, options) {
 	return store;
 }
 
-export function textInput(label, value) {
+export function paragraph(text) {
+	components.push({
+		component: Paragraph,
+		props: { text }
+	});
+}
+
+export function slider(label, value, options) {
 	const store = writable(value);
 	components.push({
-		component: TextInput,
-		props: { label, value, store }
+		component: Slider,
+		props: { label, value, ...options, store }
 	});
 	return store;
 }
 
-export function button(label, onClick) {
+export function image(src, alt) {
 	components.push({
-		component: Button,
-		props: { label, onClick }
-	});
-}
-
-export function header(text) {
-	components.push({
-		component: Header,
-		props: { text }
+		component: Image,
+		props: { src, alt }
 	});
 }
 
@@ -44,6 +53,13 @@ export function metric(label, value, unit) {
 	components.push({
 		component: Metric,
 		props: { label, value, unit }
+	});
+}
+
+export function button(label, onClick) {
+	components.push({
+		component: Button,
+		props: { label, onClick }
 	});
 }
 

@@ -7,4 +7,4 @@
   // });
 </script>
 
-<p class="text-gray-800 mb-4 fixed">sveltelit</p>
+<!-- <p class="text-gray-800 mb-4 fixed">sveltelit</p> -->
