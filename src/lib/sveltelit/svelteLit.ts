@@ -1,4 +1,4 @@
-import { writable, derived } from 'svelte/store';
+import { writable } from 'svelte/store';
 import Header from './components/Header.svelte';
 import NumberInput from './components/NumberInput.svelte';
 import Metric from './components/Metric.svelte';
@@ -54,12 +54,11 @@ export function image(src, alt) {
 }
 
 export function metric(label, value, unit) {
-	const store = writable(value);
 	components.push({
 		component: Metric,
-		props: { label, value: store, unit }
+		props: { label, value, unit }
 	});
-	return store;
+	return value; // Return the store directly for use in other calculations if needed
 }
 
 export function button(label, onClick) {
