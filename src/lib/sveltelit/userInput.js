@@ -5,7 +5,7 @@ header(1, "Rocket Performance Calculator");
 
 paragraph("This application helps you calculate the performance metrics of a rocket based on various inputs.");
 
-header(2, "Inputs");
+header(3, "Inputs");
 
 let totalMass = numberInput("Total Mass (kg)", 300, { min: 1, step: 5 });
 let burnTime = numberInput("Burn Time (seconds)", 5, { min: 0.1, step: 0.1 });
@@ -14,14 +14,15 @@ let throatArea = numberInput("Throat Area (mm²)", 200, { min: 0.1, step: 1 });
 let thrustCoefficient = slider("Thrust Coefficient (Cf)", 1.5, { min: 0.1, max: 3, step: 0.1 });
 
 sidebar(
-	() => paragraph("Sidebar test: ${testt}"),
+	// () => paragraph("Sidebar test: ${testt}"), 
 	// () => header(3, "Sidebar Inputs"),
 	// () => numberInput("Total Mass (kg)", 300, { min: 1, step: 5 }),
 	() => numberInput("Burn Time (seconds)", 5, { min: 0.1, step: 0.1 }),
 	() => slider("Chamber Pressure (bar)", 15, { min: 1, max: 100, step: 1 }),
 	() => numberInput("Throat Area (mm²)", 200, { min: 0.1, step: 1 }),
-	() => slider("Thrust Coefficient (Cf)", 1.5, { min: 0.1, max: 3, step: 0.1 })
+	() => slider("Thrust Coefficient (Cf)", {thrustCoefficient}, { min: 0.1, max: 3, step: 0.1 })
 );
+
 
 
 header(2, "Results");
