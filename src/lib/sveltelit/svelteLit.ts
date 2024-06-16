@@ -1,3 +1,4 @@
+// $lib/sveltelit/svelteLit.ts
 // import { onMount } from 'svelte';
 import { writable } from 'svelte/store';
 import Header from './components/Header.svelte';

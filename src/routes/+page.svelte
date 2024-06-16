@@ -1,6 +1,7 @@
 
 <!-- +page.svelte -->
 <script lang="ts">
+	import Nav from '$lib/ui/Nav.svelte';
   import Aircraft from '$lib/aircraft/Aircraft.svelte';
   import Terrain from '$lib/world/Terrain.svelte';
   import CoordinateLines from '$lib/world/CoordinateLines.svelte';
@@ -55,8 +56,9 @@
   }
 </script>
 
+<Nav />
+
 <main class="bg-black w-screen h-screen overflow-hidden">
-  <!-- origin selector -->
   <OriginSelector {options} {selectedOption} />
 
   <!-- Physics Toggle, Pause, and Restart Button -->

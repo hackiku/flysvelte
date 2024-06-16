@@ -1,18 +1,11 @@
-// ui.js main "flyScript" test project
-
-import { header, numberInput, paragraph, slider, image, metric, button, sidebar, render, columns } from '$lib/sveltelit/svelteLit';
+// $lib/projects/rockie/rockie.js
+import { header, numberInput, paragraph, slider, image, metric, button, columns, render } from '$lib/sveltelit/svelteLit';
 import { writable, derived } from 'svelte/store';
 
 // config
 
-header(1, "Skibidi rocket");
-paragraph("This application makes you apply to fly.");
-
-columns(1);
-
-// header(2, "Col1 h2");
-// header(3, "Col2 h3");
-// paragraph("Col3 text");
+header(1, "Rockety");
+paragraph("App-ly to fly.");
 
 header(3, "Inputs");
 
@@ -22,10 +15,10 @@ let flowRate = slider("Flow rate (kg/s)", 15, { min: 1, max: 100, step: 1 });
 let chamberPressure = slider("Chamber Pressure (bar)", 15, { min: 1, max: 100, step: 1 });
 let burnTime = writable(5);
 
-sidebar(
-	() => numberInput("Burn Time (seconds)", 5, { min: 0.1, step: 0.1 }),
-	() => slider("Chamber Pressure (bar)", 15, { min: 1, max: 100, step: 1 }),
-);
+header(2, "Col1 h2");
+header(3, "Col2 h3");
+paragraph("Col3 text");
+columns(4);
 
 header(2, "Results");
 
