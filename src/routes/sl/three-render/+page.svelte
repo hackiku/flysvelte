@@ -1,4 +1,4 @@
-<script context="module">
+<!-- <script context="module">
   // import { onMount } from 'svelte';
   import { initThreeScene } from '$lib/sveltelit/projects/threeRender/threeRender.js';
 
@@ -6,4 +6,4 @@
     initThreeScene();
   // });
 </script>
-
+ -->

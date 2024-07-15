@@ -1,4 +1,4 @@
-<script>
+<!-- <script>
   import AircraftTracker from '$lib/components/AircraftTracker.svelte';
 </script>
 
@@ -22,4 +22,4 @@
     font-size: 2rem;
     margin-bottom: 1rem;
   }
-</style>
+</style> -->
