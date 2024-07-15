@@ -119,6 +119,16 @@ export function sidebar(...content) {
 	sidebarComponents = content.map(item => (typeof item === 'function' ? item() : item));
 }
 
+// {FORWARD TEST}
+// export function columns(numColumns) {
+// 	// Take the first numColumns elements from columnComponents
+// 	const colComponents = columnComponents.splice(0, numColumns);
+// 	components.push({
+// 		component: Columns,
+// 		props: { numColumns, components: colComponents }
+// 	});
+// }
+
 export function columns(numColumns) {
 	const colComponents = components.splice(components.length - numColumns, numColumns);
 	components.push({

@@ -1,3 +1,4 @@
+<!-- $lib/sveltelit/components/NumberInput.svelte -->
 <script>
   import { onDestroy } from 'svelte';
   import { writable } from 'svelte/store';

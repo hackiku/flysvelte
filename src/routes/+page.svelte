@@ -1,5 +1,5 @@
 
-<!-- +page.svelte -->
+<!-- HOME +page.svelte -->
 <script lang="ts">
 	import Nav from '$lib/ui/Nav.svelte';
   import Aircraft from '$lib/aircraft/Aircraft.svelte';
