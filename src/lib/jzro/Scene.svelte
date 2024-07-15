@@ -1,12 +1,19 @@
 <!-- src/lib/jzro/Scene.svelte -->
 
 <script lang="ts">
-  import { T, useFrame } from '@threlte/core';
+  import { T, useFrame, useLoader } from '@threlte/core';
   import { ContactShadows, Grid, OrbitControls } from '@threlte/extras';
   import { writable } from 'svelte/store';
+  import Model from './models/WING.svelte'
+
+	import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js'
+
+	// import { rk4 } from '$lib/jzro/orbitalMech.ts';
 
   // Define the time variable to control the orbit
   let time = writable(0);
+	
+	// const gltf = useLoader(GLTFLoader).load('models/WING.gltf')
 
   useFrame((_, delta) => {
     // Update the time variable
@@ -53,3 +60,9 @@
   <T.SphereGeometry args={[0.3, 32, 32]} />
   <T.MeshStandardMaterial color="#F85122" />
 </T.Mesh>
+
+
+<Model
+  position.x={2}
+  scale={2}
+/>
