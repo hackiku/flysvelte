@@ -12,9 +12,13 @@
       <a href="#">About</a>
       <a href="#">Contact</a>
     </nav>
+		<div>12312313123</div>
   </div>
-  <App />
+	<App />
 </div>
+
+
+
 
 <style>
   body {
