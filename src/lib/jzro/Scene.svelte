@@ -5,10 +5,10 @@
   import { ContactShadows, Grid, OrbitControls } from '@threlte/extras';
   import { writable } from 'svelte/store';
   import Model from './models/WING.svelte'
-
-	import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js'
-
+  import WING from './models/WING.svelte'
 	// import { rk4 } from '$lib/jzro/orbitalMech.ts';
+
+
 
   // Define the time variable to control the orbit
   let time = writable(0);
@@ -62,7 +62,12 @@
 </T.Mesh>
 
 
-<Model
+<WING
   position.x={2}
   scale={2}
+/>
+
+<Model
+  position.x={2}
+  scale={1}
 />
