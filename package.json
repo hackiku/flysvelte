@@ -13,6 +13,7 @@
 		"@sveltejs/adapter-auto": "^3.0.0",
 		"@sveltejs/kit": "^2.0.0",
 		"@sveltejs/vite-plugin-svelte": "^3.0.0",
+		"@types/three": "^0.166.0",
 		"autoprefixer": "^10.4.19",
 		"postcss": "^8.4.38",
 		"svelte": "^4.2.7",
@@ -24,6 +25,10 @@
 	},
 	"type": "module",
 	"dependencies": {
+		"@dimforge/rapier3d-compat": "^0.13.1",
+		"@threlte/core": "^7.3.1",
+		"@threlte/extras": "^8.11.4",
+		"@threlte/rapier": "^2.0.1",
 		"cannon": "^0.6.2",
 		"cannon-es": "^0.20.0",
 		"chart.js": "^4.4.3",
