@@ -8,8 +8,6 @@
   import WING from './models/WING.svelte'
 	// import { rk4 } from '$lib/jzro/orbitalMech.ts';
 
-
-
   // Define the time variable to control the orbit
   let time = writable(0);
 	
