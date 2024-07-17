@@ -11,10 +11,10 @@
 <T.Group position={[0, -0.5, 0]}>
   <AutoColliders shape={'cuboid'}>
     <T.Mesh receiveShadow>
-      <T.BoxGeometry args={[100, 1, 100]} />
+      <T.BoxGeometry args={[15, 1, 15]} />
       <T.MeshStandardMaterial
 				color={color}
-				opacity={0.4}
+				opacity={0.7}
         transparent={true}
 			/>
     </T.Mesh>

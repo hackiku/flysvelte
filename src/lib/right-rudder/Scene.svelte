@@ -1,11 +1,11 @@
 <!-- src/lib/right-rudder/Scene.svelte -->
 
 <script lang="ts">
-  import { T } from '@threlte/core';
+  import { T, useTask, useThrelte } from '@threlte/core';
   import { Grid, OrbitControls, useGltf } from '@threlte/extras';
-  import { AutoColliders, Debug, RigidBody } from '@threlte/rapier';
+  import { AutoColliders, CollisionGroups, Debug, RigidBody } from '@threlte/rapier';
   import RAPIER from '@dimforge/rapier3d-compat';
-  import { PlaneGeometry, MeshStandardMaterial } from 'three';
+  import { PlaneGeometry, BoxGeometry, Mesh, MeshStandardMaterial, Vector3 } from 'three';
 
   // phys components
   import Ground from './phys/Ground.svelte';
@@ -17,8 +17,13 @@
   // svelte stores
   import { physicsEnabled } from './stores';
   import { derived } from 'svelte/store';
+  import { spring } from 'svelte/motion';
 
   let airplaneMesh;
+  let positionHasBeenSet = false;
+  const smoothPlayerPosX = spring(0);
+  const smoothPlayerPosZ = spring(0);
+  const t3 = new Vector3();
 
   // Load the virus model
   const gltf = useGltf('models/virus.gltf');
@@ -53,6 +58,20 @@
   export const toggleDebug = () => {
     debugEnabled = !debugEnabled;
   };
+
+  useTask(() => {
+    if (!airplaneMesh) return;
+    airplaneMesh.getWorldPosition(t3);
+    smoothPlayerPosX.set(t3.x, {
+      hard: !positionHasBeenSet
+    });
+    smoothPlayerPosZ.set(t3.z, {
+      hard: !positionHasBeenSet
+    });
+    if (!positionHasBeenSet) positionHasBeenSet = true;
+  });
+  const { size } = useThrelte();
+  $: zoom = $size.width / 8;
 </script>
 
 <!-- Camera setup for 3rd person view -->
@@ -78,40 +97,81 @@
 <T.DirectionalLight intensity={0.8} position={[10, 10, 10]} />
 <T.AmbientLight intensity={0.3} />
 
+<!-- ----------- RESET ---------------- -->
 {#key resetCounter}
   <Particle position={[2, 5, 0]} rotation={[0, 0, 0]} />
   <Airplane bind:airplaneMesh position={[0, 4, 0]} />
+  <Player bind:airplaneMesh position={[4, 4, 0]} />
+
+  <!-- Model with Cuboid Collider -->
+  <T.Group position={[1.5, 0, 2.5]} rotation={[2.4, 0, 0]}>
+    <RigidBody>
+      <AutoColliders shape="cuboid">
+        <Model position={[0, 0, 0]} rotation={[0.2, 1.2, 0]} scale={1.1} />
+      </AutoColliders>
+    </RigidBody>
+  </T.Group>
 {/key}
 
 <!-- Grid -->
 <Grid position.y={0.01} cellColor="#ffffff" sectionColor="#ffffff" sectionThickness={1} fadeDistance={105} cellSize={2} />
 
 <!-- Box -->
-<T.Mesh position={[1, 3, 0]} rotation={[0.5, 0.5, 0]} scale={[1, 1, 1]}>
-  <T.BoxGeometry args={[1, 1, 1]} />
-  <T.MeshStandardMaterial
-    color="#00ff00"
-    metalness={0.7}
-    roughness={0.2}
-    emissive="#0000ff"
-    emissiveIntensity={0.5}
-    opacity={0.8}
-    transparent={true}
-  />
-</T.Mesh>
-
-<Model position={[3, 3, 7]} rotation={[-0.5, 0.5, 0]} scale={[1, 1, 1]} />
+<T.Group position={[1, 3, 0]} rotation={[0.5, 0.5, 0]} scale={[1, 1, 1]}>
+  <RigidBody>
+    <AutoColliders shape="cuboid">
+      <T.Mesh>
+        <T.BoxGeometry args={[1, 1, 1]} />
+        <T.MeshStandardMaterial
+          color="#00ff00"
+          metalness={0.7}
+          roughness={0.2}
+          emissive="#0000ff"
+          emissiveIntensity={0.5}
+          opacity={0.8}
+          transparent={true}
+        />
+      </T.Mesh>
+    </AutoColliders>
+  </RigidBody>
+</T.Group>
 
 {#if debugEnabled}
   <Debug depthTest={true} depthWrite={true} />
 {/if}
 
-<T.Group position={[-2.5, 2, -2.5]} rotation={[0, 0, 0]}>
-	<RigidBody>
-		<AutoColliders shape="convexHull">
-			<Model position={[0, 0, 0]} rotation={[0, 0, 0]} scale={2} />
-		</AutoColliders>
-	</RigidBody>
-</T.Group>
+<!-- Display the airplane model or fallback to the Model component -->
+{#if $airplane}
+  <T.Group position={[-2.5, 2, 2.5]} rotation={[1.500, 0, 0]}>
+    <RigidBody>
+      <AutoColliders shape="convexHull">
+        <T.Mesh
+          castShadow
+          geometry={$airplane.geometry}
+          material={$airplane.material}
+        />
+      </AutoColliders>
+    </RigidBody>
+  </T.Group>
+{:else}
+  <T.Group position={[-2.5, 2, 2.5]} rotation={[0, 0, 0]} scale={[1, 1, 1]}>
+    <RigidBody>
+      <AutoColliders shape="cuboid">
+        <T.Mesh>
+          <T.BoxGeometry args={[1, 1, 1]} />
+          <T.MeshStandardMaterial
+            color="orange"
+            metalness={0.7}
+            roughness={0.2}
+            emissive="#cf6600"
+            emissiveIntensity={0.5}
+            opacity={0.8}
+            transparent={true}
+          />
+        </T.Mesh>
+      </AutoColliders>
+    </RigidBody>
+  </T.Group>
+{/if}
 
 <Ground />
