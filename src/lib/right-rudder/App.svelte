@@ -7,7 +7,12 @@
   import { writable } from 'svelte/store';
   import { physicsEnabled } from './stores';
 
-  let isSimulating = false;
+  let reset: () => any | undefined;
+  let toggleDebug: () => any | undefined
+
+
+	
+	let isSimulating = false;
   let showControls = writable(true);
 
   function handleToggle(event: CustomEvent) {
@@ -23,7 +28,13 @@
 </script>
 
 <Canvas>
-  <Scene />
+  <!-- <Scene /> -->
+  <Scene
+		bind:reset
+		bind:toggleDebug
+	/>
+
+	
 </Canvas>
 
 <div class="absolute top-0 left-0 p-4 text-white">
@@ -31,20 +42,22 @@
 </div>
 
 {#if $showControls}
-
-	<!-- Left Segment -->
+  <!-- Left Segment -->
   <div class="flex flex-col items-start bg-gray-800 bg-opacity-10 rounded-lg p-4 m-4 absolute top-1/2 transform -translate-y-1/2 left-0 w-20vh h-60vh">
     <p>airspeed = </p>
   </div>
 
-	<!-- Right Segment -->
+  <!-- Right Segment -->
   <div class="flex flex-col items-start bg-gray-800 bg-opacity-10 rounded-lg p-4 m-4 absolute top-1/2 transform -translate-y-1/2 right-0 w-20vh h-60vh">
+		<button on:click={toggleDebug} class="border border-gray-700 text-white rounded-lg p-3">Toggle Debug</button>
     <!-- Right Segment Content -->
   </div>
 
-	<!-- Bottom Segment -->
-  <div class="flex items-center justify-center bg-gray-800 bg-opacity-10 rounded-lg p-4 m-4 w-full md:w-2/3 lg:w-1/2 absolute bottom-0 left-1/2 transform -translate-x-1/2">
-		<StartStopButton on:toggle={handleToggle} />
+  <!-- Bottom Segment -->
+  <div class="flex items-center justify-center space-x-4
+		bg-gray-800 bg-opacity-10 rounded-lg p-4 m-4 w-full md:w-2/3 lg:w-1/2 absolute bottom-0 left-1/2 transform -translate-x-1/2">
+    <StartStopButton on:toggle={handleToggle} />
+		<button on:click={reset} class="border border-gray-700 text-white rounded-lg p-3">Reset</button>
     <label class="flex items-center ml-4">
       <input type="checkbox" bind:checked={$physicsEnabled} class="mr-2">
       <span>Physics</span>
@@ -56,12 +69,9 @@
   Toggle Controls
 </button>
 
-
 <style>
 
-  h1, h2, h3, h4, h5, p, div {
-		@apply text-white;
-	}
-
-	
+	h1, h2, h3, h4, h5, p, div {
+    @apply text-white;
+  }
 </style>
