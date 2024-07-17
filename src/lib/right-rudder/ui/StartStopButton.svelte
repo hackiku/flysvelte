@@ -7,26 +7,8 @@
   }
 </script>
 
-<style>
-  .start-stop-button {
-    position: absolute;
-    bottom: 20px;
-    left: 50%;
-    transform: translateX(-50%);
-    padding: 10px 20px;
-    background-color: gray;
-    color: white;
-    font-size: 20px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-  }
-
-  .start-stop-button:active {
-    background-color: darkgray;
-  }
-</style>
-
-<button class="start-stop-button" on:click={togglePress}>
+<button 
+  on:click={togglePress} 
+  class="px-4 py-2 bg-gray-700 text-white text-lg rounded-md cursor-pointer hover:bg-gray-600 active:bg-gray-800 transition">
   {isPressed ? 'Pressed' : 'Not Pressed'}
 </button>

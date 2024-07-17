@@ -5,6 +5,7 @@
   import Scene from './Scene.svelte';
   import StartStopButton from './ui/StartStopButton.svelte';
   import { writable } from 'svelte/store';
+  import { physicsEnabled } from './stores';
 
   let isSimulating = false;
   let showControls = writable(true);
@@ -17,6 +18,8 @@
   function toggleControls() {
     showControls.update(n => !n);
   }
+
+  $: console.log(`Physics Enabled: ${$physicsEnabled}`);
 </script>
 
 <Canvas>
@@ -28,20 +31,24 @@
 </div>
 
 {#if $showControls}
-  <!-- Left Segment -->
-  <div class="flex flex-col items-start bg-gray-800 bg-opacity-30 rounded-lg p-4 m-4 absolute top-1/2 transform -translate-y-1/2 left-0 w-20vh h-60vh">
-    <div>airspeed = </div>
-    <div>foo = </div>
+
+	<!-- Left Segment -->
+  <div class="flex flex-col items-start bg-gray-800 bg-opacity-10 rounded-lg p-4 m-4 absolute top-1/2 transform -translate-y-1/2 left-0 w-20vh h-60vh">
+    <p>airspeed = </p>
   </div>
 
-  <!-- Right Segment -->
-  <div class="flex flex-col items-start bg-gray-800 bg-opacity-30 rounded-lg p-4 m-4 absolute top-1/2 transform -translate-y-1/2 right-0 w-20vh h-60vh">
+	<!-- Right Segment -->
+  <div class="flex flex-col items-start bg-gray-800 bg-opacity-10 rounded-lg p-4 m-4 absolute top-1/2 transform -translate-y-1/2 right-0 w-20vh h-60vh">
     <!-- Right Segment Content -->
   </div>
-	
-  <!-- Bottom Segment -->
-  <div class="flex items-center justify-center bg-gray-800 bg-opacity-30 rounded-lg p-4 m-4 w-full md:w-2/3 lg:w-1/2 absolute bottom-0 left-1/2 transform -translate-x-1/2">
-    <StartStopButton on:toggle={handleToggle} />
+
+	<!-- Bottom Segment -->
+  <div class="flex items-center justify-center bg-gray-800 bg-opacity-10 rounded-lg p-4 m-4 w-full md:w-2/3 lg:w-1/2 absolute bottom-0 left-1/2 transform -translate-x-1/2">
+		<StartStopButton on:toggle={handleToggle} />
+    <label class="flex items-center ml-4">
+      <input type="checkbox" bind:checked={$physicsEnabled} class="mr-2">
+      <span>Physics</span>
+    </label>
   </div>
 {/if}
 
@@ -49,18 +56,12 @@
   Toggle Controls
 </button>
 
+
 <style>
 
-	div {
+  h1, h2, h3, h4, h5, p, div {
 		@apply text-white;
 	}
 
-  h1 {
-		@apply text-2xl;
-	}
-
-	p {
-		@apply text-sm text-white;
-	}
 	
 </style>

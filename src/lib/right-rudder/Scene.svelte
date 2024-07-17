@@ -1,10 +1,9 @@
 <!-- src/lib/right-rudder/Scene.svelte -->
-<!-- Main scene component for 3D visualization -->
-
 <script lang="ts">
   import { T } from '@threlte/core';
   import { Grid, OrbitControls } from '@threlte/extras';
   import Model from './models/WING.svelte';
+  import { physicsEnabled } from './stores';
 </script>
 
 <!-- Camera setup for 3rd person view -->
@@ -28,7 +27,7 @@
 <T.AmbientLight intensity={0.3} />
 
 <!-- Ground grid -->
-<Grid position.y={-0.01} cellColor="#ffffff" sectionColor="#ffffff" sectionThickness={1} fadeDistance={75} cellSize={5} />
+<Grid position.y={-0.01} cellColor="#ffffff" sectionColor="#ffffff" sectionThickness={1} fadeDistance={105} cellSize={2} />
 
 <!-- Import and use the WING model -->
 <Model position={[0, 1.2, 0]} scale={1} />
