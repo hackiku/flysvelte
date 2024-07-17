@@ -99,15 +99,6 @@
   <Particle position={[2, 5, 0]} rotation={[0, 0, 0]} />
   <Airplane bind:airplaneMesh position={[0, 4, 0]} />
   <Player bind:airplaneMesh position={[4, 4, 0]} />
-
-  <!-- Model with Cuboid Collider -->
-  <T.Group position={[1.5, 0, 2.5]} rotation={[2.4, 0, 0]}>
-    <RigidBody>
-      <AutoColliders shape="cuboid">
-        <Model position={[0, 0, 0]} rotation={[0.2, 1.2, 0]} scale={1.1} />
-      </AutoColliders>
-    </RigidBody>
-  </T.Group>
 {/key}
 
 <!-- Grid -->
@@ -115,10 +106,11 @@
 	position.y={0.01}
 	cellColor="#ffffff"
 	sectionColor="#FE3D00"
-	sectionThickness={1.5}
-	fadeDistance={105}
+	cellThickness={0.6}
+	sectionThickness={1.2}
+	fadeDistance={60}
 	cellSize={2}
-	gridSize={50}
+	gridSize={100}
 />
 
 
@@ -187,16 +179,11 @@
 />
 
 <Ribs
-	position={[3, 4.0, 7]}
+	position={[4, 1.0, 2]}
 	rotation={[0, 2.5, 0]}
 	scale={[0.5, 0.5, 0.5]}
 />
-
-<!-- <T.Mesh geometry={$gltf.nodes.virus.geometry}>
-	<T.MeshPhysicalMaterial color="hotpink" />
-</T.Mesh> -->
 	
-
 
 
 <Ground />
