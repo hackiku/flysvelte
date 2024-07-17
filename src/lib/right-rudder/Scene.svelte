@@ -1,7 +1,7 @@
 <!-- src/lib/right-rudder/Scene.svelte -->
 
 <script lang="ts">
-  import { T, useTask, useThrelte } from '@threlte/core';
+  import { T, useTask, useThrelte, useFrame } from '@threlte/core';
   import { Grid, OrbitControls, useGltf } from '@threlte/extras';
   import { AutoColliders, CollisionGroups, Debug, RigidBody } from '@threlte/rapier';
   import RAPIER from '@dimforge/rapier3d-compat';
@@ -14,11 +14,10 @@
   import Airplane from './phys/Airplane.svelte';
   import Virus from './models/virus.svelte';
   import Ribs from './models/Ribs.svelte';
-  import Flyer from './models/Ribs.svelte';
 
   // svelte stores
   import { physicsEnabled } from './stores';
-  import { derived } from 'svelte/store';
+  import { writable, derived } from 'svelte/store';
   import { spring } from 'svelte/motion';
 
   let airplaneMesh: Mesh;
@@ -34,11 +33,35 @@
   };
 
 
+	// FORCES ------------
+
+  // Thrust control store
+  const thrust = writable(0);
+
+  // Example controls for adjusting thrust
+  const increaseThrust = () => thrust.update(n => n + 1);
+  const decreaseThrust = () => thrust.update(n => n - 1);
+
+  let boxRigidBody;
+
+  useFrame(() => {
+    if (boxRigidBody) {
+      // Get current thrust value
+      let currentThrust;
+      thrust.subscribe(value => currentThrust = value);
+
+      // Apply thrust in the horizontal direction (X-axis)
+      const horizontalForce = new Vector3(currentThrust, 0, 0);
+      boxRigidBody.applyForce(horizontalForce, true);
+    }
+  });
 </script>
 
-<!-- <Flyer /> -->
+<!-- ---------------------------------------------------------------------------------------- -->
+<!-- ---------------------------------------------------------------------------------------- -->
 
-<!-- Camera setup for 3rd person view -->
+
+<!-- camera -->
 <T.PerspectiveCamera
   makeDefault
   position={[18, 15, 10]}
@@ -57,34 +80,60 @@
   />
 </T.PerspectiveCamera>
 
-<!-- Lighting setup -->
+<!-- lighting -->
 <T.DirectionalLight intensity={0.8} position={[10, 10, 10]} />
 <T.AmbientLight intensity={0.3} />
 
 <!-- ===================================================== -->
 <!-- ======================= RESET ======================= -->
+<!-- ===================================================== -->
  
 {#key resetCounter}
   <Particle position={[2, 5, 0]} rotation={[0, 0, 0]} />
   <Airplane bind:airplaneMesh position={[0, 4, 0]} />
   <Player bind:airplaneMesh position={[4, 4, 0]} />
 
-	<Virus
-		position={[5, 8.0, 6]}
-		rotation={[0.4, 2.0, 0]}
-		gravityPosition={[0, 20.0, 0]}
-		range={10}
-  	strength={1}
-	/>
+
+  <Virus
+    position={[5, 8.0, 6]}
+    rotation={[0.4, 2.0, 0]}
+    gravityPosition={[0, 20.0, 0]}
+    range={10}
+    strength={1}
+		/>
+    <!-- bind:this={virusRigidBody} -->
 
 	<Ribs
 		position={[4, 1.0, -12]}
 		rotation={[0, 2.5, 0]}
 		scale={[0.5, 0.5, 0.5]}
 	/>
+
+
+	<!-- Box -->
+	<T.Group position={[4, 4, 0]} rotation={[0.5, 0.5, 0]} scale={[1, 1, 1]}>
+		<!-- <RigidBody bind:this={boxRigidBody}> -->
+		<RigidBody >
+			<AutoColliders shape="cuboid">
+				<T.Mesh>
+					<T.BoxGeometry args={[1, 1, 1]} />
+					<T.MeshStandardMaterial
+						color="yellow"
+						metalness={0.7}
+						roughness={0.2}
+						emissive="#0000ff"
+						emissiveIntensity={0.9}
+						opacity={0.8}
+						transparent={true}
+					/>
+				</T.Mesh>
+			</AutoColliders>
+		</RigidBody>
+	</T.Group>
+
 {/key}
 
-<!-- Grid -->
+<!-- grid -->
 <Grid
 	position.y={0.01}
 	cellColor="#ffffff"
@@ -96,12 +145,17 @@
 	gridSize={100}
 />
 
-<!-- Box -->
-<T.Group position={[1, 3, 0]} rotation={[0.5, 0.5, 0]} scale={[1, 1, 1]}>
+
+
+
+
+
+<!-- OLD BOX -->
+<T.Group position={[6, 3, -3]} rotation={[0.5, 0.5, 0]} scale={[1, 1, 1]}>
   <RigidBody>
     <AutoColliders shape="cuboid">
       <T.Mesh>
-        <T.BoxGeometry args={[1, 1, 1]} />
+        <T.BoxGeometry args={[3, 1, 1]} />
         <T.MeshStandardMaterial
           color="#00ff00"
           metalness={0.7}
