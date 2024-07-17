@@ -103,7 +103,7 @@
 	<Virus
 		position={[5, 8.0, 6]}
 		rotation={[0.4, 2.0, 0]}
-		gravityPosition={[0, 100.0, 0]}
+		gravityPosition={[0, 20.0, 450]}
 		range={1}
   	strength={1}
 	/>

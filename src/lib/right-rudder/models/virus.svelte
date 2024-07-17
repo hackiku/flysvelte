@@ -16,14 +16,10 @@ Command: npx @threlte/gltf@2.0.3 virus.gltf --transform
   const component = forwardEventHandlers()
   // const attractorRange = 100; 
   // const attractorStrength = 500;
-
-
-  export let position = [0, 0, 0]
-  export let rotation = [0, 0, 0]
   export let gravityType = 'linear'
-	export let gravityPosition = [0, 10, 0]
-  export let range = 1
-  export let strength = 5 
+	export let gravityPosition = [0, 100, 0]
+  export let range = 10
+  export let strength = 1 
 
 </script>
 
@@ -32,7 +28,7 @@ Command: npx @threlte/gltf@2.0.3 virus.gltf --transform
     <slot name="fallback" />
   {:then gltf}
 	  <RigidBody>
-      <AutoColliders shape="cuboid">
+      <AutoColliders shape="trimesh">
 				<T.Mesh
 					geometry={gltf.nodes.aileron_left.geometry}
 					material={gltf.materials['1.000000_1.000000_1.000000_0.000000_0.000000']}
