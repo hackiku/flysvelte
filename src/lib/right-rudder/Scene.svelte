@@ -4,7 +4,7 @@
   import { T, useFrame } from '@threlte/core';
   import { Grid, OrbitControls } from '@threlte/extras';
   import { AutoColliders, Debug, RigidBody } from '@threlte/rapier';
-  import { Vector3 } from 'three';
+  import { Mesh, Vector3 } from 'three';
 
   // phys components
   import Ground from './phys/Ground.svelte';
@@ -16,8 +16,9 @@
 
   // svelte stores
   import { writable } from 'svelte/store';
+  import { thrust, followCamera } from './stores'
 
-  let airplaneMesh;
+  let airplaneMesh: Mesh;
 
   let resetCounter = 0;
   export const reset = () => {
@@ -29,22 +30,20 @@
     debugEnabled = !debugEnabled;
   };
 
-  // Thrust control store
-  export const thrust = writable(0);
-
   let boxRigidBody;
+  // let virusRigidBody;
+
 
   useFrame(() => {
     if (boxRigidBody) {
-      // Get current thrust value
-      let currentThrust;
-      thrust.subscribe(value => currentThrust = value);
-
-      // Apply thrust in the horizontal direction (X-axis)
-      const horizontalForce = new Vector3(currentThrust, 0, 0);
-      boxRigidBody.applyImpulse(horizontalForce, true);
+      thrust.subscribe(value => {
+        // Apply thrust in the horizontal direction (X-axis)
+        const horizontalForce = new Vector3(value, 0, 0);
+        boxRigidBody.applyImpulse(horizontalForce, true);
+      });
     }
   });
+
 </script>
 
 <!-- Camera setup for 3rd person view -->
@@ -79,11 +78,9 @@
   <Player bind:airplaneMesh position={[4, 4, 0]} />
 
   <Virus
-    position={[5, 8.0, 6]}
-    rotation={[0.4, 2.0, 0]}
-    gravityPosition={[0, 20.0, 0]}
-    range={10}
-    strength={1}
+    position={[3, -2.0, 6]}
+    rotation={[0.2, -1.6, 0.3]}
+        
   />
 
   <Ribs
@@ -113,7 +110,11 @@
   </T.Group>
 {/key}
 
-<!-- Grid -->
+<!-- =======================       ======================= -->
+<!-- ===================================================== -->
+
+
+<!-- grid -->
 <Grid
   position.y={0.01}
   cellColor="#ffffff"

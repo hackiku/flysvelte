@@ -35,6 +35,11 @@
     showControls.update(n => !n);
   }
 
+  function toggleCameraFollow() {
+    followCamera.update(n => !n);
+  }
+
+
 </script>
 
 <div class="w-screen h-screen">
@@ -84,25 +89,26 @@
     />
     <HUD {playerSpeed} {playerPosition} />
 
-		<Slider
-			bind:value={$thrust}
-			label="thrust"
-			min={-5}
-      max={5}
-    />
 
   </div>
 
   <!-- 👉 right  -->
   <div class="flex flex-col items-start bg-gray-800 bg-opacity-10 rounded-lg p-4 m-4 absolute top-1/2 transform -translate-y-1/2 right-0 w-20vh h-60vh">
     <button on:click={toggleDebug} class="border border-gray-700 text-white rounded-lg p-3">Toggle Debug</button>
-  </div>
+		
+		<!-- Toggle Camera Follow Button -->
+		<div class="flex items-center justify-center space-x-4
+			bg-gray-800 bg-opacity-10 rounded-lg p-4 m-4 w-full md:w-2/3 lg:w-1/2 absolute top-10 left-1/2 transform -translate-x-1/2">
+			<button on:click={toggleCameraFollow} class="border border-gray-700 text-white rounded-lg p-3">Toggle Camera Follow</button>
+		</div>
+
+</div>
 
   <!-- 👇 bottom -->
   <div class="flex items-center justify-center space-x-4
     bg-gray-800 bg-opacity-10 rounded-lg p-4 m-4 w-full md:w-2/3 lg:w-1/2 absolute bottom-0 left-1/2 transform -translate-x-1/2">
     <StartStopButton/>
-    <button on:click={reset} class="border border-gray-700 text-white rounded-lg p-3">Reset</button>
+
     <label class="flex items-center ml-4">
       <input type="checkbox" bind:checked={$physicsEnabled} class="mr-2">
       <span>Phys</span>
@@ -112,8 +118,18 @@
 
 {/if}
 
-<div class="flex items-end absolute bottom-10 right-10">
-	<button on:click={toggleControls} class="p-4 bg-gray-700 text-white rounded-lg">
+<div class="flex items-end absolute bottom-10 left-5">
+		<Slider
+			bind:value={$thrust}
+			label="thrust"
+			min={-50}
+      max={50}
+    />
+</div>
+
+<div class="flex items-center absolute bottom-8 space-x-4 right-5">
+	<button on:click={reset} class="border border-gray-700 text-white rounded-lg p-2">Reset</button>
+	<button on:click={toggleControls} class="p-2 bg-gray-700 text-white rounded-lg">
 		Controls
 	</button>
 </div>
