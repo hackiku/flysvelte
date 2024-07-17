@@ -21,12 +21,12 @@ Command: npx @threlte/gltf@2.0.3 virus.gltf --transform
 
   let virusRigidBody;
 
-  const initialLinearVelocity = new Vector3(1, 6, 1);
-  const initialAngularVelocity = new Vector3(0.1, 0.2, 0.3);
+  const initialLinearVelocity = new Vector3(0, 0, 0);
+  // const initialAngularVelocity = new Vector3(0.1, 0., 0.3);
   // const initialLinearVelocity = new Vector3(0, 0, 0);
-  // const initialAngularVelocity = new Vector3(0, 0, 0);
+  const initialAngularVelocity = new Vector3(0, 0, 0);
 
-	let linearVelocity = [1.1, 10, 0];
+	let linearVelocity = [0, 0, 0];
   let angularVelocity = [0, 0, 0];
   
   useFrame(() => {

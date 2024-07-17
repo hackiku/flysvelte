@@ -19,8 +19,8 @@
   let toggleDebug: () => any | undefined
 
   // gravity
-  const gravityTypes: GravityType[] = ['static', 'linear', 'newtonian']
-  let gravityType: GravityType = gravityTypes[2]
+  // const gravityTypes: GravityType[] = ['static', 'linear', 'newtonian']
+  // let gravityType: GravityType = gravityTypes[1]
 
 	let range = 1
 	let strength = 1
@@ -42,7 +42,8 @@
 
 <div class="w-screen h-screen">
   <Canvas>
-    <World gravityType={gravityType}>
+    <!-- <World gravityType={gravityType}> -->
+    <World>
       <Scene
         bind:reset
         bind:toggleDebug
@@ -66,12 +67,12 @@
   
   <!-- 👈 left -->
   <div class="flex flex-col space-y-4 items-start bg-gray-800 bg-opacity-20 rounded-lg p-4 m-4 absolute top-1/2 transform -translate-y-1/2 left-0 w-[30vh] h-[60vh]">
-    <label for="gravity-select" class="text-sm opacity-40 mt-4">Select Gravity Type:</label>
+    <!-- <label for="gravity-select" class="text-sm opacity-40 mt-4">Select Gravity Type:</label>
     <select id="gravity-select" bind:value={gravityType} class="mt-2 p-2 bg-gray-700 text-white rounded">
       {#each gravityTypes as gravity}
         <option value={gravity}>{gravity}</option>
       {/each}
-    </select>
+    </select> -->
 
 		<Slider
 			bind:value={strength}
@@ -120,8 +121,8 @@
 		<Slider
 			bind:value={$thrust}
 			label="thrust"
-			min={-50}
-      max={50}
+			min={-20}
+      max={20}
     />
 </div>
 
