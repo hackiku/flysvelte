@@ -11,6 +11,11 @@ Command: npx @threlte/gltf@2.0.3 virus.gltf --transform
 
   export const ref = new Group()
 
+	// const range = 10
+	// const strength = 0.1
+	// const gravityType = 'point'
+	// const gravityPosition = [0, 0, 0]
+	
   const gltf = useGltf('models/virus-transformed.glb', { useDraco: true })
 
   const component = forwardEventHandlers()

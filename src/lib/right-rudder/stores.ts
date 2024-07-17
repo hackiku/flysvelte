@@ -2,5 +2,6 @@
 
 import { writable } from 'svelte/store';
 
-// Physics Enabled Store
+// Physics
 export const physicsEnabled = writable<boolean>(false);
+export const thrust = writable<float>(55.247);

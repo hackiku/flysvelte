@@ -5,11 +5,12 @@
   import { World } from '@threlte/rapier'
   import type { GravityType } from '@threlte/rapier'
   import Scene from './Scene.svelte'
-  import FallbackScene from './phys/FallbackScene.svelte'
+	import FallbackScene from './phys/FallbackScene.svelte'
   import { HTML } from '@threlte/extras'
   // stores
   import { writable } from 'svelte/store'
-  import { physicsEnabled } from './stores'
+  import { physicsEnabled, thrust } from './stores'
+  // import { physicsEnabled } from './stores'
   // ui
 	import { Pane, Slider, TabGroup, TabPage, Checkbox, Button } from 'svelte-tweakpane-ui'
 
@@ -82,6 +83,14 @@
       max={5}
     />
     <HUD {playerSpeed} {playerPosition} />
+
+		<Slider
+			bind:value={$thrust}
+			label="thrust"
+			min={-5}
+      max={5}
+    />
+
   </div>
 
   <!-- 👉 right  -->
@@ -99,6 +108,8 @@
       <span>Phys</span>
     </label>
   </div>
+	
+
 {/if}
 
 <div class="flex items-end absolute bottom-10 right-10">
