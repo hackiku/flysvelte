@@ -16,14 +16,7 @@
   let toggleDebug: () => any | undefined
 
 
-
-	let isSimulating = false;
   let showControls = writable(true);
-
-  function handleToggle(event: CustomEvent) {
-    isSimulating = event.detail.isSimulating;
-    console.log(`Simulation ${isSimulating ? 'started' : 'stopped'}`);
-  }
 
   function toggleControls() {
     showControls.update(n => !n);
@@ -37,7 +30,9 @@
     <World>
       <Scene />
 				<HTML>
-					<p>Let's<br />Freaking Fly.<br /></p>
+					<div class="w-[120px]">
+						<p class="text-sm">Let's Freaking Fly</p>
+					</div>
 				</HTML>
 	    <FallbackScene slot="fallback" />
     </World>
@@ -45,12 +40,12 @@
 </div>
 
 
-<div class="absolute top-0 left-0 p-4 text-white">
-  <h1 class="text-2xl">right rudder</h1>
+<div class="absolute top-0 left-0 p-4">
+  <h1 class="text-md font-mono opacity-30">right rudder</h1>
 </div>
 
 {#if $showControls} 
-  <!-- segments -->
+	
 	<!-- left -->
   <div class="flex flex-col items-start bg-gray-800 bg-opacity-10 rounded-lg p-4 m-4 absolute top-1/2 transform -translate-y-1/2 left-0 w-20vh h-60vh">
     <p>airspeed = </p>
@@ -64,7 +59,7 @@
   <!-- bottom -->
   <div class="flex items-center justify-center space-x-4
 		bg-gray-800 bg-opacity-10 rounded-lg p-4 m-4 w-full md:w-2/3 lg:w-1/2 absolute bottom-0 left-1/2 transform -translate-x-1/2">
-    <StartStopButton on:toggle={handleToggle} />
+    <StartStopButton/>
 		<button on:click={reset} class="border border-gray-700 text-white rounded-lg p-3">Reset</button>
     <label class="flex items-center ml-4">
       <input type="checkbox" bind:checked={$physicsEnabled} class="mr-2">
@@ -78,7 +73,6 @@
 </button>
 
 <style>
-
 	h1, h2, h3, h4, h5, p, div {
     @apply text-white;
   }
