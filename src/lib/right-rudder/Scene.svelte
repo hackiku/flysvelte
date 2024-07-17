@@ -9,16 +9,18 @@
   // phys components
   import Ground from './phys/Ground.svelte';
   import Particle from './phys/Particle.svelte';
-  import Player from './phys/Player.svelte';
+  // import Player from './phys/Player.svelte';
   import Airplane from './phys/Airplane.svelte';
   import Virus from './models/virus.svelte';
   import Ribs from './models/Ribs.svelte';
 
   // svelte stores
   import { writable } from 'svelte/store';
-  import { thrust, followCamera } from './stores'
+  import { thrust, followCamera, aircraftState } from './stores';
+  import { get } from 'svelte/store';
 
   let airplaneMesh: Mesh;
+  let camera;
 
   let resetCounter = 0;
   export const reset = () => {
@@ -31,8 +33,6 @@
   };
 
   let boxRigidBody;
-  // let virusRigidBody;
-
 
   useFrame(() => {
     if (boxRigidBody) {
@@ -41,14 +41,26 @@
         const horizontalForce = new Vector3(value, 0, 0);
         boxRigidBody.applyImpulse(horizontalForce, true);
       });
+
+      const position = boxRigidBody.translation();
+
+      aircraftState.update(state => ({
+        ...state,
+        position: { x: position.x, y: position.y, z: position.z }
+      }));
+
+      if (camera && get(followCamera)) {
+        camera.position.set(position.x + 10, position.y + 10, position.z + 10);
+        camera.lookAt(position.x, position.y, position.z);
+      }
     }
   });
-
 </script>
 
 <!-- Camera setup for 3rd person view -->
 <T.PerspectiveCamera
   makeDefault
+  bind:this={camera}
   position={[18, 15, 10]}
   fov={50}
   on:create={({ ref }) => {
@@ -74,14 +86,15 @@
  
 {#key resetCounter}
   <Particle position={[2, 5, 0]} rotation={[0, 0, 0]} />
-  <Airplane bind:airplaneMesh position={[0, 4, 0]} />
-  <Player bind:airplaneMesh position={[4, 4, 0]} />
+  <Airplane bind:airplaneMesh position={[-4, 5, 7]} />
+  <!-- <Player bind:airplaneMesh position={[4, 4, 0]} /> -->
 
   <Virus
-    position={[3, -2.0, 6]}
-    rotation={[0.2, -1.6, 0.3]}
-        
-  />
+    position={[0.0, 1.5, 0.0]}
+    rotation={[0.0, 0.0, 0.0]}
+	/>
+    <!-- position={[3, 1.0, 6]}
+    rotation={[0.2, -1.6, 0.3]} -->
 
   <Ribs
     position={[4, 1.0, -12]}
@@ -90,8 +103,9 @@
   />
 
   <!-- Box -->
-  <T.Group position={[4, 4, 0]} rotation={[0.5, 0.5, 0]} scale={[1, 1, 1]}>
-    <RigidBody ref={node => boxRigidBody = node}>
+  <T.Group position={[4, 14, 0]} rotation={[0.5, 0.5, 0]} scale={[1, 1, 1]}>
+    <!-- <RigidBody ref={node => boxRigidBody = node}> -->
+    <RigidBody>
       <AutoColliders shape="cuboid">
         <T.Mesh>
           <T.BoxGeometry args={[1, 1, 1]} />
@@ -110,11 +124,7 @@
   </T.Group>
 {/key}
 
-<!-- =======================       ======================= -->
-<!-- ===================================================== -->
-
-
-<!-- grid -->
+<!-- Grid -->
 <Grid
   position.y={0.01}
   cellColor="#ffffff"

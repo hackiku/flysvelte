@@ -26,7 +26,7 @@ Command: npx @threlte/gltf@2.0.3 virus.gltf --transform
   // const initialLinearVelocity = new Vector3(0, 0, 0);
   // const initialAngularVelocity = new Vector3(0, 0, 0);
 
-	let linearVelocity = [0.1, 4, 0];
+	let linearVelocity = [1.1, 10, 0];
   let angularVelocity = [0, 0, 0];
   
   useFrame(() => {

@@ -9,11 +9,9 @@
   import { HTML } from '@threlte/extras'
   // stores
   import { writable } from 'svelte/store'
-  import { physicsEnabled, thrust } from './stores'
-  // import { physicsEnabled } from './stores'
+  import { physicsEnabled, thrust, followCamera, aircraftState } from './stores'
   // ui
 	import { Pane, Slider, TabGroup, TabPage, Checkbox, Button } from 'svelte-tweakpane-ui'
-
   import StartStopButton from './ui/StartStopButton.svelte'
   import HUD from './ui/HUD.svelte'
 
@@ -22,7 +20,7 @@
 
   // gravity
   const gravityTypes: GravityType[] = ['static', 'linear', 'newtonian']
-  let gravityType: GravityType = gravityTypes[0]
+  let gravityType: GravityType = gravityTypes[2]
 
 	let range = 1
 	let strength = 1
