@@ -22,20 +22,6 @@
   import { spring } from 'svelte/motion';
 
   let airplaneMesh: Mesh;
-  let positionHasBeenSet = false;
-  const smoothPlayerPosX = spring(0);
-  const smoothPlayerPosZ = spring(0);
-  const t3 = new Vector3();
-
-  // Load the virus model
-  const gltf = useGltf('models/virus-transformed.glb', { useDraco: true })
-  const nodes = gltf?.nodes || {};
-  // Derive the airplane mesh from the loaded GLTF
-  const airplane = derived(gltf, (gltf) => {
-    const nodeName = Object.keys(nodes).find((key) => key.toLowerCase().includes('virus'));
-    if (!gltf || !nodeName) return null;
-    return nodes[nodeName];
-  });  
 
   let resetCounter = 0;
   export const reset = () => {
@@ -47,20 +33,10 @@
     debugEnabled = !debugEnabled;
   };
 
-  useTask(() => {
-    if (!airplaneMesh) return;
-    airplaneMesh.getWorldPosition(t3);
-    smoothPlayerPosX.set(t3.x, {
-      hard: !positionHasBeenSet
-    });
-    smoothPlayerPosZ.set(t3.z, {
-      hard: !positionHasBeenSet
-    });
-    if (!positionHasBeenSet) positionHasBeenSet = true;
-  });
-  const { size } = useThrelte();
-  $: zoom = $size.width / 8;
+
 </script>
+
+<!-- <Flyer /> -->
 
 <!-- Camera setup for 3rd person view -->
 <T.PerspectiveCamera

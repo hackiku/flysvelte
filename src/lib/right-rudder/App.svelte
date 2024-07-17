@@ -39,13 +39,9 @@
 <div class="w-screen h-screen">
   <Canvas>
     <World gravityType={gravityType}>
-      <!-- <Scene /> -->
       <Scene
         bind:reset
         bind:toggleDebug
-        gravityType={gravityType}
-        range={range}
-        strength={strength}
       />
 
       <HTML>
@@ -85,7 +81,7 @@
 			min={-5}
       max={5}
     />
-    <!-- <HUD {playerSpeed} {playerPosition} /> -->
+    <HUD {playerSpeed} {playerPosition} />
   </div>
 
   <!-- 👉 right  -->
@@ -100,14 +96,16 @@
     <button on:click={reset} class="border border-gray-700 text-white rounded-lg p-3">Reset</button>
     <label class="flex items-center ml-4">
       <input type="checkbox" bind:checked={$physicsEnabled} class="mr-2">
-      <span>Physics</span>
+      <span>Phys</span>
     </label>
   </div>
 {/if}
 
-<button on:click={toggleControls} class="absolute bottom-10 right-10 p-4 bg-gray-700 text-white rounded-lg">
-  Toggle Controls
-</button>
+<div class="flex items-end absolute bottom-10 right-10">
+	<button on:click={toggleControls} class="p-4 bg-gray-700 text-white rounded-lg">
+		Controls
+	</button>
+</div>
 
 <style>
   h1, h2, h3, h4, h5, p, div {
