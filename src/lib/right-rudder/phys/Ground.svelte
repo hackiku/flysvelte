@@ -11,7 +11,7 @@
 <T.Group position={[0, -0.5, 0]}>
   <AutoColliders shape={'cuboid'}>
     <T.Mesh receiveShadow>
-      <T.BoxGeometry args={[15, 1, 15]} />
+      <T.BoxGeometry args={[25, 1, 25]} />
       <T.MeshStandardMaterial
 				color={color}
 				opacity={0.7}
