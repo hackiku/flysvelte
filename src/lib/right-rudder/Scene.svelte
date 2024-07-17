@@ -13,6 +13,8 @@
   import Player from './phys/Player.svelte';
   import Airplane from './phys/Airplane.svelte';
   import Model from './models/WING.svelte';
+  // import Virus from './models/virus.svelte';
+  import Virus from './models/virus.svelte';
 
   // svelte stores
   import { physicsEnabled } from './stores';
@@ -173,5 +175,10 @@
     </RigidBody>
   </T.Group>
 {/if}
+
+<Virus
+	position={[0, 4.0, 0]}
+	rotation={[0, 2.5, 0]}
+/>
 
 <Ground />
