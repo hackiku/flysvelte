@@ -3,17 +3,25 @@
 <script lang="ts">
   import { T } from '@threlte/core';
   import { Collider, RigidBody, AutoColliders } from '@threlte/rapier';
-  import { SphereGeometry, MeshStandardMaterial, Vector3 } from 'three';
+  import { SphereGeometry, MeshStandardMaterial, Vector3, Euler } from 'three';
+
+  export let position: Parameters<Vector3['set']> = [0, 5, 0];
+  export let rotation: Parameters<Euler['set']> = [0, 0, 0];
 
   const radius = 0.25; 
-  const position = new Vector3(0, 5, 0); 
   const geometry = new SphereGeometry(radius); 
   const color = 'red'; 
 </script>
 
 <RigidBody type="dynamic">
   <AutoColliders shape="ball">
-    <T.Mesh castShadow receiveShadow position={position.toArray()} geometry={geometry}>
+    <T.Mesh
+      castShadow
+      receiveShadow
+      position={position}
+      rotation={rotation}
+      geometry={geometry}
+    >
       <T.MeshStandardMaterial color={color} />
     </T.Mesh>
   </AutoColliders>

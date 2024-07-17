@@ -5,18 +5,20 @@
 	import { World } from '@threlte/rapier';	
   import Scene from './Scene.svelte';
   import FallbackScene from './phys/FallbackScene.svelte'
-
-  import StartStopButton from './ui/StartStopButton.svelte';
 	import { HTML } from '@threlte/extras'
-
-  import { writable } from 'svelte/store';
+	// stores
+	import { writable } from 'svelte/store';
   import { physicsEnabled } from './stores';
+	// ui
+  import StartStopButton from './ui/StartStopButton.svelte';
+  import HUD from './ui/HUD.svelte';
 
   let reset: () => any | undefined;
   let toggleDebug: () => any | undefined
 
-
   let showControls = writable(true);
+  let playerSpeed = writable(0);
+  let playerPosition = writable({ x: 0, y: 0, z: 0 });
 
   function toggleControls() {
     showControls.update(n => !n);
@@ -51,17 +53,17 @@
 
 {#if $showControls} 
 	
-	<!-- left -->
-  <div class="flex flex-col items-start bg-gray-800 bg-opacity-10 rounded-lg p-4 m-4 absolute top-1/2 transform -translate-y-1/2 left-0 w-20vh h-60vh">
-    <p>airspeed = </p>
+	<!-- 👈 left -->
+  <div class="flex flex-col items-start bg-gray-800 bg-opacity-20 rounded-lg p-4 m-4 absolute top-1/2 transform -translate-y-1/2 left-0 w-[30vh] h-[60vh]">
+    <HUD {playerSpeed} {playerPosition} />
   </div>
 
-  <!-- right  -->
+  <!-- 👉 right  -->
   <div class="flex flex-col items-start bg-gray-800 bg-opacity-10 rounded-lg p-4 m-4 absolute top-1/2 transform -translate-y-1/2 right-0 w-20vh h-60vh">
 		<button on:click={toggleDebug} class="border border-gray-700 text-white rounded-lg p-3">Toggle Debug</button>
   </div>
 
-  <!-- bottom -->
+  <!-- 👇 bottom -->
   <div class="flex items-center justify-center space-x-4
 		bg-gray-800 bg-opacity-10 rounded-lg p-4 m-4 w-full md:w-2/3 lg:w-1/2 absolute bottom-0 left-1/2 transform -translate-x-1/2">
     <StartStopButton/>

@@ -7,15 +7,19 @@
 	import { Collider, Debug, RigidBody } from '@threlte/rapier'
   import RAPIER from '@dimforge/rapier3d-compat'
 	import { PlaneGeometry, BoxGeometry, MeshStandardMaterial } from 'three'
-	
 	// phys components
 	import Ground from './phys/Ground.svelte';
 	import Particle from './phys/Particle.svelte';
+  import Player from './phys/Player.svelte';
+  import Airplane from './phys/Airplane.svelte';
   import Model from './models/WING.svelte';
-  
 	// stores
 	import { physicsEnabled } from './stores';
-  let nsubdivs = 10
+
+
+  let airplaneMesh: Mesh
+
+  let nsubdivs = 100
   let heights = []
 
 	const geometry = new PlaneGeometry(10, 10, nsubdivs, nsubdivs)
@@ -37,6 +41,10 @@
   makeDefault
   position={[0, 10, 12]}
   fov={50}
+	on:create={({ ref }) => {
+    ref.lookAt(10, 1, 100)
+  }}
+
 >
   <OrbitControls
     enableZoom={true}
@@ -53,13 +61,19 @@
 <T.AmbientLight intensity={0.3} />
 
 {#key resetCounter}
-	<Particle />
+  <Particle position={[2, 5, 0]} rotation={[0, 0, 0]} />
+	<Airplane
+    bind:airplaneMesh
+    position={[0, 4, 0]}
+  />
+
 {/key}
 
 <!-- grid -->
 <Grid position.y={0.01} cellColor="#ffffff" sectionColor="#ffffff" sectionThickness={1} fadeDistance={105} cellSize={2} />
 
 
+<!-- box -->
 <T.Mesh position={[1, 3, 0]} rotation={[0.5, 0.5, 0]} scale={[1, 1, 1]}>
   <T.BoxGeometry args={[1, 1, 1]} />
   <T.MeshStandardMaterial
@@ -78,5 +92,8 @@
 <Ground />
 
 {#if debugEnabled === true}
-  <Debug />
+	<Debug
+		depthTest={true}
+		depthWrite={true}
+	/>
 {/if}
