@@ -1,30 +1,34 @@
 <!-- src/lib/right-rudder/App.svelte -->
 
 <script lang="ts">
-  import { Canvas } from '@threlte/core';
-	import { World } from '@threlte/rapier';	
-  import Scene from './Scene.svelte';
+  import { Canvas } from '@threlte/core'
+	import { World } from '@threlte/rapier'
+	import type { GravityType } from '@threlte/rapier'
+  import Scene from './Scene.svelte'
   import FallbackScene from './phys/FallbackScene.svelte'
 	import { HTML } from '@threlte/extras'
 	// stores
-	import { writable } from 'svelte/store';
-  import { physicsEnabled } from './stores';
+	import { writable } from 'svelte/store'
+  import { physicsEnabled } from './stores'
 	// ui
-  import StartStopButton from './ui/StartStopButton.svelte';
-  import HUD from './ui/HUD.svelte';
+  import StartStopButton from './ui/StartStopButton.svelte'
+  import HUD from './ui/HUD.svelte'
 
   let reset: () => any | undefined;
   let toggleDebug: () => any | undefined
 
-  let showControls = writable(true);
+	// gravity
+	const gravityTypes: GravityType[] = ['static', 'linear', 'newtonian']
+  let gravityType: GravityType = gravityTypes[0]
+
+	let showControls = writable(true)
   let playerSpeed = writable(0);
-  let playerPosition = writable({ x: 0, y: 0, z: 0 });
+  let playerPosition = writable({ x: 0, y: 0, z: 0 })
 
   function toggleControls() {
     showControls.update(n => !n);
   }
 
-  $: console.log(`Physics Enabled: ${$physicsEnabled}`);
 </script>
 
 <div class="w-screen h-screen">
@@ -55,7 +59,20 @@
 	
 	<!-- 👈 left -->
   <div class="flex flex-col items-start bg-gray-800 bg-opacity-20 rounded-lg p-4 m-4 absolute top-1/2 transform -translate-y-1/2 left-0 w-[30vh] h-[60vh]">
-    <HUD {playerSpeed} {playerPosition} />
+    <label for="gravity-select" class="text-sm opacity-40 mt-4">Select Gravity Type:</label>
+    <select id="gravity-select" bind:value={gravityType} 		
+			on:click={() => {
+				gravityType = gravityTypes[1]
+			}}
+			class="mt-2 p-2 bg-gray-700 text-white rounded"
+			>
+      
+			{#each gravityTypes as gravity}
+        <option value={gravity}>{gravity}</option>
+      {/each}
+    </select>
+
+		<HUD {playerSpeed} {playerPosition} />
   </div>
 
   <!-- 👉 right  -->

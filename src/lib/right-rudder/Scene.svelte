@@ -34,7 +34,6 @@
 
   // Check if the GLTF model is loaded and extract nodes and materials
   const nodes = gltf?.nodes || {};
-  const materials = gltf?.materials || {};
 
   // Log nodes to understand the structure
   $: console.log('GLTF Nodes:', nodes);
@@ -94,11 +93,25 @@
 <T.DirectionalLight intensity={0.8} position={[10, 10, 10]} />
 <T.AmbientLight intensity={0.3} />
 
-<!-- ----------- RESET ---------------- -->
+<!-- ===================================================== -->
+<!-- ======================= RESET ======================= -->
+ 
 {#key resetCounter}
   <Particle position={[2, 5, 0]} rotation={[0, 0, 0]} />
   <Airplane bind:airplaneMesh position={[0, 4, 0]} />
   <Player bind:airplaneMesh position={[4, 4, 0]} />
+	<Virus
+		position={[5, 8.0, 6]}
+		rotation={[0.4, 2.0, 0]}
+		gravityPosition={[0, 100.0, 0]}
+		range={1}
+  	strength={1}
+	/>
+	<Ribs
+		position={[4, 1.0, 2]}
+		rotation={[0, 2.5, 0]}
+		scale={[0.5, 0.5, 0.5]}
+	/>
 {/key}
 
 <!-- Grid -->
@@ -112,7 +125,6 @@
 	cellSize={2}
 	gridSize={100}
 />
-
 
 <!-- Box -->
 <T.Group position={[1, 3, 0]} rotation={[0.5, 0.5, 0]} scale={[1, 1, 1]}>
@@ -173,17 +185,7 @@
 {/if}
 
 
-<Virus
-	position={[0, 6.0, 0]}
-	rotation={[0, 2.0, 0]}
-/>
 
-<Ribs
-	position={[4, 1.0, 2]}
-	rotation={[0, 2.5, 0]}
-	scale={[0.5, 0.5, 0.5]}
-/>
-	
 
 
 <Ground />

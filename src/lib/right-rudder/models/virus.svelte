@@ -5,15 +5,26 @@ Command: npx @threlte/gltf@2.0.3 virus.gltf --transform
 
 <script>
   import { Group } from 'three'
-  import { T, forwardEventHandlers } from '@threlte/core'
+  import { T, forwardEventHandlers, useFrame } from '@threlte/core'
   import { useGltf } from '@threlte/extras'
-  import { RigidBody, AutoColliders } from '@threlte/rapier'
+  import { RigidBody, AutoColliders, Attractor } from '@threlte/rapier'
 
   export const ref = new Group()
 
   const gltf = useGltf('models/virus-transformed.glb', { useDraco: true })
 
   const component = forwardEventHandlers()
+  // const attractorRange = 100; 
+  // const attractorStrength = 500;
+
+
+  export let position = [0, 0, 0]
+  export let rotation = [0, 0, 0]
+  export let gravityType = 'linear'
+	export let gravityPosition = [0, 10, 0]
+  export let range = 1
+  export let strength = 5 
+
 </script>
 
 <T is={ref} dispose={false} {...$$restProps} bind:this={$component}>
@@ -21,7 +32,7 @@ Command: npx @threlte/gltf@2.0.3 virus.gltf --transform
     <slot name="fallback" />
   {:then gltf}
 	  <RigidBody>
-      <AutoColliders shape="convexHull">
+      <AutoColliders shape="cuboid">
 				<T.Mesh
 					geometry={gltf.nodes.aileron_left.geometry}
 					material={gltf.materials['1.000000_1.000000_1.000000_0.000000_0.000000']}
@@ -438,7 +449,7 @@ Command: npx @threlte/gltf@2.0.3 virus.gltf --transform
 					geometry={gltf.nodes.mesh103_mesh.geometry}
 					material={gltf.materials['0.000000_0.000000_0.000000_0.000000_0.000000']}
 				/>
-				<T.Mesh
+				<!-- <T.Mesh
 					geometry={gltf.nodes.mesh103_mesh_1.geometry}
 					material={gltf.materials['0.800000_0.800000_0.800000_0.000000_0.000000']}
 				/>
@@ -457,10 +468,17 @@ Command: npx @threlte/gltf@2.0.3 virus.gltf --transform
 				<T.Mesh
 					geometry={gltf.nodes.mesh108_mesh.geometry}
 					material={gltf.materials['0.000000_0.000000_0.000000_0.000000_0.800000']}
-				/>
+				/> -->
 				<T.Mesh
 					geometry={gltf.nodes.mesh108_mesh_1.geometry}
 					material={gltf.materials['0.000000_0.000000_0.000000_0.000000_0.400000']}
+				/> 
+
+				<Attractor
+					range={range}
+					strength={strength}
+					gravityType={gravityType}
+					position={gravityPosition}
 				/>
 
 			</AutoColliders>
