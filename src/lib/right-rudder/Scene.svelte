@@ -12,9 +12,9 @@
   import Particle from './phys/Particle.svelte';
   import Player from './phys/Player.svelte';
   import Airplane from './phys/Airplane.svelte';
-  import Model from './models/WING.svelte';
   import Virus from './models/virus.svelte';
   import Ribs from './models/Ribs.svelte';
+  import Flyer from './models/Ribs.svelte';
 
   // svelte stores
   import { physicsEnabled } from './stores';
@@ -29,15 +29,7 @@
 
   // Load the virus model
   const gltf = useGltf('models/virus-transformed.glb', { useDraco: true })
-
-  $: console.log('GLTF Loaded:', gltf);
-
-  // Check if the GLTF model is loaded and extract nodes and materials
   const nodes = gltf?.nodes || {};
-
-  // Log nodes to understand the structure
-  $: console.log('GLTF Nodes:', nodes);
-
   // Derive the airplane mesh from the loaded GLTF
   const airplane = derived(gltf, (gltf) => {
     const nodeName = Object.keys(nodes).find((key) => key.toLowerCase().includes('virus'));
@@ -100,15 +92,17 @@
   <Particle position={[2, 5, 0]} rotation={[0, 0, 0]} />
   <Airplane bind:airplaneMesh position={[0, 4, 0]} />
   <Player bind:airplaneMesh position={[4, 4, 0]} />
+
 	<Virus
 		position={[5, 8.0, 6]}
 		rotation={[0.4, 2.0, 0]}
-		gravityPosition={[0, 20.0, 450]}
-		range={1}
+		gravityPosition={[0, 20.0, 0]}
+		range={10}
   	strength={1}
 	/>
+
 	<Ribs
-		position={[4, 1.0, 2]}
+		position={[4, 1.0, -12]}
 		rotation={[0, 2.5, 0]}
 		scale={[0.5, 0.5, 0.5]}
 	/>
@@ -149,43 +143,6 @@
 {#if debugEnabled}
   <Debug depthTest={true} depthWrite={true} />
 {/if}
-
-<!-- Display the airplane model or fallback to the Model component -->
-{#if $airplane}
-  <T.Group position={[-2.5, 2, 2.5]} rotation={[1.500, 0, 0]}>
-    <RigidBody>
-      <AutoColliders shape="convexHull">
-        <T.Mesh
-          castShadow
-          geometry={$airplane.geometry}
-          material={$airplane.material}
-        />
-      </AutoColliders>
-    </RigidBody>
-  </T.Group>
-{:else}
-  <T.Group position={[-2.5, 2, 2.5]} rotation={[0, 0, 0]} scale={[1, 1, 1]}>
-    <RigidBody>
-      <AutoColliders shape="cuboid">
-        <T.Mesh>
-          <T.BoxGeometry args={[1, 1, 1]} />
-          <T.MeshStandardMaterial
-            color="orange"
-            metalness={0.7}
-            roughness={0.2}
-            emissive="#cf6600"
-            emissiveIntensity={0.5}
-            opacity={0.8}
-            transparent={true}
-          />
-        </T.Mesh>
-      </AutoColliders>
-    </RigidBody>
-  </T.Group>
-{/if}
-
-
-
 
 
 <Ground />
