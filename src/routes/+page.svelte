@@ -4,6 +4,7 @@
 	import Nav from '$lib/ui/Nav.svelte';
   import Aircraft from '$lib/aircraft/Aircraft.svelte';
   import Terrain from '$lib/world/Terrain.svelte';
+	
   import CoordinateLines from '$lib/world/CoordinateLines.svelte';
   import AxisArrows from '$lib/world/AxisArrows.svelte';
   import VectorArrow from '$lib/ui/VectorArrow.svelte';
