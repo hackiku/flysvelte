@@ -8,7 +8,6 @@
 	<App />
 </div>
 
-
 <style>
   body {
     margin: 0;
