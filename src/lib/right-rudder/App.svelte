@@ -28,10 +28,15 @@
 <div class="w-screen h-screen">
   <Canvas>
     <World>
-      <Scene />
+      <!-- <Scene /> -->
+			<Scene
+        bind:reset
+        bind:toggleDebug
+      />
+
 				<HTML>
 					<div class="w-[120px]">
-						<p class="text-sm">Let's Freaking Fly</p>
+						<p class="text-sm opacity-40">|</p>
 					</div>
 				</HTML>
 	    <FallbackScene slot="fallback" />

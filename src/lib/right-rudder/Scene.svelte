@@ -7,7 +7,7 @@
   import { Grid, OrbitControls } from '@threlte/extras';
 	import { Collider, Debug, RigidBody } from '@threlte/rapier'
   import RAPIER from '@dimforge/rapier3d-compat'
-	import { BoxGeometry, MeshStandardMaterial } from 'three'
+	import { PlaneGeometry, BoxGeometry, MeshStandardMaterial } from 'three'
 	
 	// sim components
 	import Ground from './phys/Ground.svelte';
@@ -16,8 +16,21 @@
   import { World, RigidBodyDesc, ColliderDesc } from '@dimforge/rapier3d-compat';
   
 	import { physicsEnabled } from './stores';
+  let nsubdivs = 10
+  let heights = []
 
-  // $: rotationCasted = rotation?.toArray() as [x: number, y: number, z: number]
+	const geometry = new PlaneGeometry(10, 10, nsubdivs, nsubdivs)
+
+	let resetCounter = 0
+  export const reset = () => {
+    resetCounter += 1
+  }
+
+  let debugEnabled = false
+  export const toggleDebug = () => {
+    debugEnabled = !debugEnabled
+  }
+
 </script>
 
 <!-- Camera setup for 3rd person view -->
@@ -40,6 +53,10 @@
 <T.DirectionalLight intensity={0.8} position={[10, 10, 10]} />
 <T.AmbientLight intensity={0.3} />
 
+<!-- {#key resetCounter}
+	<FallingShapes />
+{/key} -->
+
 <!-- grid -->
 <Grid position.y={-0.0} cellColor="#ffffff" sectionColor="#ffffff" sectionThickness={1} fadeDistance={105} cellSize={2} />
 
@@ -57,4 +74,7 @@
 
 <Particle />
 
-<Debug />
+
+{#if debugEnabled === true}
+  <Debug />
+{/if}
