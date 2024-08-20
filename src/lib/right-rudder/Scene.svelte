@@ -2,7 +2,7 @@
 
 <script lang="ts">
   import { T, useFrame } from '@threlte/core';
-  import { Grid, OrbitControls } from '@threlte/extras';
+  import { Grid, OrbitControls, TransformControls } from '@threlte/extras';
   import { AutoColliders, Debug, RigidBody } from '@threlte/rapier';
   import { Mesh, Vector3 } from 'three';
 
@@ -126,6 +126,7 @@
 
 <!-- Grid -->
 <Grid
+infiniteGrid
   position.y={0.01}
   cellColor="#ffffff"
   sectionColor="#FE3D00"
@@ -134,6 +135,13 @@
   fadeDistance={60}
   cellSize={2}
   gridSize={100}
+/>
+
+<!-- Transform Controls -->
+<TransformControls 
+	translationSnap={1}
+	position={[5, 0, 5]}
+	
 />
 
 <!-- OLD BOX -->
